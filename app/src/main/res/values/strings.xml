@@ -1,3 +1,67 @@
 <resources>
-    <string name="app_name">PiggyBank</string>
+    <string name="app_name">Piggy Bank</string>
+
+    <string name="calc_clear">C</string>
+
+    <!-- Statistic -->
+    <string name="header_statistic">Statistic</string>
+    <string name="tab1">DAY</string>
+    <string name="tab2">MONTH</string>
+    <string name="tab3">YEAR</string>
+
+    <!-- RecyclerView -->
+    <string name="item_income_category">Income</string>
+    <string name="add_category">Add Category</string>
+
+
+    <!-- Errors -->
+    <string name="wrong_value">Wrong value</string>
+    <string name="use_greater_zero">Use a value greater than zero</string>
+    <string name="choose_category">Choose a category</string>
+
+    <!-- Utils -->
+    <string name="navigation_drawer_open">Open navigation drawer></string>
+    <string name="navigation_drawer_close">Close navigation drawer></string>
+    <string name="main">Main</string>
+    <string name="expenses">Edit expenses</string>
+    <string name="incomes">Edit incomes</string>
+    <string name="edit">Edit</string>
+    <string name="about_app">About App</string>
+    <string name="premium_account">Premium Account</string>
+    <string name="exit">Exit</string>
+    <string name="select_icon_for_new_category">Select Icon for new Category</string>
+    <string name="category_name">Category Name</string>
+    <string name="add_funds">Add Funds</string>
+    <string name="your_budget">YOUR BUDGET</string>
+    <string name="in_this_section_you_can_add_funds_to_your_budget">In this section you can add funds to your budget</string>
+    <string name="manage_your_finances">MANAGE YOUR FINANCES</string>
+    <string name="use_for_free">Use for free</string>
+    <string name="subscription_0_33">subscription $0.58</string>
+    <string name="or">or</string>
+    <string name="version_1_0">Version 1.0</string>
+    <string name="swipe_to_delete">Swipe to Delete</string>
+    <string name="you_spent_nothing">You Spent Nothing</string>
+    <string name="your_wallet_is_empty">Your Wallet Is Empty</string>
+    <string name="delete">DELETE</string>
+    <string name="subscribe">subscribe</string>
+    <string name="disable_ad">Disable Ads</string>
+    <string name="about_h1">Piggy Bank. Manage your finance</string>
+    <string name="about_h2">Do not save what is left after spending, but spend what is left after saving.</string>
+    <string name="about_h3">Why You Need to Track Expenses to Control Your Finances \n\nIt really is important to keep track of how you are spending your money. It is the first step to understanding how you are managing your money, and to taking control of your finances. It may seem like a lot of work when you first begin, but you can make it as simple or complicated as you want to. Tracking your expenses can help you stop feeling like you have little to show for your hard work.
+        \n
+        \n-    Easy to use, not complicated and practical interface
+        \n-    Always accessible information about your budget
+        \n-    Convenient and quick entry of data
+        \n-    Full control over finances
+        \n-    Clear financial planning
+        \n-    Add/edit/delete categories easily
+        \n-    Sort your expenses by date, month and years</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_delete_category">Tap on category icon, hold 1 sec. Then click OK in dialog window.</string>
+    <string name="how_to_delete_category">How to Delete Category?</string>
+    <string name="or_in_main_menu">or in main menu</string>
+    <string name="you_can_change_your_expenses_on_screen_statistic">You can change your expenses on screen “Statistic</string>
+    <string name="how_to_edit_your_expenses">How to edit your Expenses?</string>
+    <string name="you_can_change_your_incomes_on_screen_add_funds">You can change your incomes on screen “Add Funds</string>
+    <string name="how_to_edit_your_incomes">How to edit your Incomes?</string>
 </resources>
