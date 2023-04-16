@@ -8,7 +8,15 @@
     <fragment
             android:id="@+id/splashFragment"
             android:name="com.example.piggybank.SplashFragment"
-
-            tools:layout="@layout/splash_fragment"
-            android:label="SplashFragment" />
+            android:label="SplashFragment"
+            tools:layout="@layout/splash_fragment">
+        <action
+                android:id="@+id/action_splashFragment_to_mainFragment"
+                app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/mainFragment"
+            android:name="com.example.piggybank.MainFragment"
+            android:label="MainFragment"
+            tools:layout="@layout/main_fragment"/>
 </navigation>
