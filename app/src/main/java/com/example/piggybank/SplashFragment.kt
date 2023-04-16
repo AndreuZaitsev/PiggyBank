@@ -14,7 +14,7 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
 
     private fun scheduleNavigationToMain() {
         val currentTime = System.currentTimeMillis()
-        val isTimePassed = { (System.currentTimeMillis() - currentTime) >= 4000 }
+        val isTimePassed = { (System.currentTimeMillis() - currentTime) >= DELAY_MILLIS }
         Thread {
             while (true) {
                 if (isTimePassed()) {
@@ -26,5 +26,10 @@ class SplashFragment : Fragment(R.layout.splash_fragment) {
             }
 
         }.start()
+    }
+
+    companion object {
+
+        private const val DELAY_MILLIS = 1000L
     }
 }
