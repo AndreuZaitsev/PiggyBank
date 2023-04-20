@@ -79,11 +79,10 @@
             app:spanCount="2"
             tools:listitem="@layout/item_category" />
 
-    <View
-            android:id="@+id/keyboard"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:background="@color/primary"
+    <include
+            layout="@layout/keyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

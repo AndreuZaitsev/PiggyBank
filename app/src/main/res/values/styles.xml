@@ -1,4 +1,5 @@
 <resources>
+
     <style name="MyToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
         <item name="colorControlNormal">@color/colorWhite</item>
         <item name="titleTextColor">@color/colorWhite</item>
@@ -6,9 +7,22 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-<!--    <style name="AppTheme.Animation">-->
-<!--        <item name="android:windowExitTransition">@transition/explode</item>-->
-<!--        <item name="android:windowReenterTransition">@android:transition/slide_top</item>-->
-<!--    </style>-->
+    <!--    <style name="AppTheme.Animation">-->
+    <!--        <item name="android:windowExitTransition">@transition/explode</item>-->
+    <!--        <item name="android:windowReenterTransition">@android:transition/slide_top</item>-->
+    <!--    </style>-->
+    <style name="Keyboard" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:backgroundTint">@color/background_keyboard</item>
+    </style>
 
+    <style name="Keyboard.Num">
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="Keyboard.Action">
+        <item name="android:textColor">@color/primary_dark</item>
+    </style>
 </resources>
