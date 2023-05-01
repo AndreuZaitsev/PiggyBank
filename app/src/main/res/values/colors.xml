@@ -23,6 +23,7 @@
     <color name="color_pie10">#4931F7</color>
     <color name="color_pie11">#1DDBA2</color>
     <color name="color_pie_value">#5A6C83</color>
+    <color name="background_keyboard">#EDF2EF</color>
 
 
 </resources>
