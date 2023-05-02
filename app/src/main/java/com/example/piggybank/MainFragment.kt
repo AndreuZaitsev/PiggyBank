@@ -28,10 +28,50 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding.listCategories.adapter = adapter
         adapter.submitList(listOf(
-            CategoryItem("clothes", R.drawable.ic_clothes,false),
+            CategoryItem("clothes", R.drawable.ic_clothes, false),
             CategoryItem("food", R.drawable.ic_food, false),
             CategoryItem("gift", R.drawable.ic_gift, true),
         ))
+        setUpKeyboard()
+    }
+
+    private fun setUpKeyboard() {
+        with(binding.keyboard) {
+            fun setNumbers(input: String) {
+                tvNumbers.text = input
+            }
+
+            arrayOf(
+                tv0,
+                tv1,
+                tv2,
+                tv3,
+                tv4,
+                tv5,
+                tv6,
+                tv7,
+                tv8,
+                tv9,
+                tvDot,
+                tvPlus,
+                tvMinus
+            ).forEach { textView ->
+                textView.setOnClickListener {
+                    setNumbers(tvNumbers.text.toString() + textView.text.toString())
+                }
+            }
+
+            tvReset.setOnClickListener {
+                setNumbers("")
+            }
+            btnDelete.setOnClickListener {
+                setNumbers(tvNumbers.text.toString().dropLast(1))
+            }
+
+            tvSum.setOnClickListener {
+                setNumbers(Calculator().calculate(tvNumbers.text.toString()).toString())
+            }
+        }
     }
 }
 
