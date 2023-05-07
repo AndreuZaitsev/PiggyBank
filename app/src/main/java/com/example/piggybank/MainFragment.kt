@@ -5,9 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 import com.example.piggybank.databinding.MainFragmentBinding
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(R.layout.main_fragment) {
+
+    private val viewModel: MainViewModel by viewModels()
 
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
@@ -27,20 +36,26 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.listCategories.adapter = adapter
-        adapter.submitList(listOf(
-            CategoryItem("clothes", R.drawable.ic_clothes, false),
-            CategoryItem("food", R.drawable.ic_food, false),
-            CategoryItem("gift", R.drawable.ic_gift, true),
-        ))
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    adapter.submitList(uiState.categories)
+
+                    binding.tvBalance.text = uiState.balance
+
+                    binding.keyboard.tvNumbers.text = uiState.keyboardInput
+                }
+            }
+        }
+
+        val snapHelper: SnapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(binding.listCategories)
+
         setUpKeyboard()
     }
 
     private fun setUpKeyboard() {
         with(binding.keyboard) {
-            fun setNumbers(input: String) {
-                tvNumbers.text = input
-            }
-
             arrayOf(
                 tv0,
                 tv1,
@@ -57,19 +72,19 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 tvMinus
             ).forEach { textView ->
                 textView.setOnClickListener {
-                    setNumbers(tvNumbers.text.toString() + textView.text.toString())
+                    viewModel.onKeyClicked(textView.text.toString())
                 }
             }
 
             tvReset.setOnClickListener {
-                setNumbers("")
+                viewModel.onResetClicked()
             }
             btnDelete.setOnClickListener {
-                setNumbers(tvNumbers.text.toString().dropLast(1))
+                viewModel.onDeleteClicked()
             }
 
             tvSum.setOnClickListener {
-                setNumbers(Calculator().calculate(tvNumbers.text.toString()).toString())
+                viewModel.onSumClicked()
             }
         }
     }

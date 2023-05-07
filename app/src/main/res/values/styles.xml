@@ -15,7 +15,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">18sp</item>
         <item name="android:gravity">center</item>
-        <item name="android:backgroundTint">@color/background_keyboard</item>
+        <item name="android:background">@drawable/button_calc</item>
     </style>
 
     <style name="Keyboard.Num">

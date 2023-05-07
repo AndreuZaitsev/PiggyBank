@@ -1,5 +1,7 @@
 package com.example.piggybank
 
+import kotlin.math.roundToInt
+
 class Calculator {
 
     fun calculate(input: String): Double {
@@ -21,6 +23,6 @@ class Calculator {
                 sum += num
             }
         }
-        return sum
+        return String.format("%.2f", sum).toDouble()
     }
 }

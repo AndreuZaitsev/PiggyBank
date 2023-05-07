@@ -26,7 +26,7 @@
             android:id="@+id/btn_delete"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@color/background_keyboard"
+            android:background="@drawable/button_calc"
             android:padding="10dp"
             android:src="@drawable/ic_backspace_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
