@@ -7,9 +7,14 @@ class MyApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val dataBase = Room.databaseBuilder(
+        DataBaseHolder.dataBase  = Room.databaseBuilder(
             applicationContext,
             DataBase::class.java, "data_base"
         ).build()
     }
+}
+
+object DataBaseHolder {
+
+    lateinit var dataBase: DataBase
 }

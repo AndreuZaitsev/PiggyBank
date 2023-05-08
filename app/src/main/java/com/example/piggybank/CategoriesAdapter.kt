@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.piggybank.databinding.ItemCategoryBinding
 
-class CategoriesAdapter() : ListAdapter<CategoryItem, CategoryViewHolder>(CategoryDiff()) {
+class CategoriesAdapter(
+    private val onClick: (CategoryItem) -> Unit = {}
+) : ListAdapter<CategoryItem, CategoryViewHolder>(CategoryDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -17,7 +19,7 @@ class CategoriesAdapter() : ListAdapter<CategoryItem, CategoryViewHolder>(Catego
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onClick)
     }
 }
 
@@ -42,11 +44,14 @@ class CategoryViewHolder(
     private val binding: ItemCategoryBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: CategoryItem) {
+    fun bind(item: CategoryItem, onClick: (CategoryItem) -> Unit) {
         binding.tvName.text = item.name
         binding.ivIcon.setImageResource(item.iconRes)
         binding.ivIcon.background = if (item.isSelected) {
             ContextCompat.getDrawable(binding.root.context, R.drawable.bg_checked)
         } else null
+        binding.root.setOnClickListener {
+            onClick.invoke(item)
+        }
     }
 }

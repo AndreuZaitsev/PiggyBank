@@ -21,7 +21,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter = CategoriesAdapter()
+    private val adapter = CategoriesAdapter {
+        viewModel.onCategoryClicked(it)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
