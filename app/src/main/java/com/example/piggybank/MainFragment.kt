@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.piggybank.databinding.MainFragmentBinding
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(R.layout.main_fragment) {
@@ -39,16 +42,23 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding.listCategories.adapter = adapter
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+            viewLifecycleOwner.repeatOnLifecycle(STARTED) {
                 viewModel.uiState.collect { uiState ->
                     adapter.submitList(uiState.categories)
-
                     binding.tvBalance.text = uiState.balance
-
                     binding.keyboard.tvNumbers.text = uiState.keyboardInput
                 }
             }
         }
+
+        viewModel.navigateToCategoryCreationEvent
+            .onEach {
+                findNavController().navigate(R.id.action_mainFragment_to_addFragment)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
+
 
         val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.listCategories)

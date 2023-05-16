@@ -18,5 +18,14 @@
             android:id="@+id/mainFragment"
             android:name="com.example.piggybank.MainFragment"
             android:label="MainFragment"
-            tools:layout="@layout/main_fragment"/>
+            tools:layout="@layout/main_fragment">
+        <action
+                android:id="@+id/action_mainFragment_to_addFragment"
+                app:destination="@id/addFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/addFragment"
+            android:name="com.example.piggybank.AddFragment"
+            android:label="AddFragment"
+            tools:layout="@layout/add_category"/>
 </navigation>

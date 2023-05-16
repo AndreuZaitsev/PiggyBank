@@ -2,8 +2,10 @@ package com.example.piggybank
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -12,6 +14,9 @@ class MainViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+
+    private val _navigateToCategoryCreationEvent = MutableSharedFlow<Unit>()
+    val navigateToCategoryCreationEvent = _navigateToCategoryCreationEvent.asSharedFlow()
 
     private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
 
@@ -53,12 +58,7 @@ class MainViewModel : ViewModel() {
     fun onCategoryClicked(categoryItem: CategoryItem) {
         viewModelScope.launch {
             if (categoryItem.iconRes == R.drawable.ic_add) {
-                repository.addCategory()
-            }
-            _uiState.update {
-                it.copy(
-                    categories = loadCategoryItems()
-                )
+                _navigateToCategoryCreationEvent.emit(Unit)
             }
         }
     }
