@@ -1,4 +1,4 @@
-package com.example.piggybank
+package com.example.piggybank.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,14 +7,15 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.piggybank.databinding.ItemCategoryBinding
+import com.example.piggybank.R
+import com.example.piggybank.databinding.ItemCategoryHorBinding
 
 class CategoriesAdapter(
     private val onClick: (CategoryItem) -> Unit = {}
 ) : ListAdapter<CategoryItem, CategoryViewHolder>(CategoryDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCategoryHorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CategoryViewHolder(binding)
     }
 
@@ -29,7 +30,7 @@ data class CategoryItem(
     val isSelected: Boolean
 )
 
-class CategoryDiff() : DiffUtil.ItemCallback<CategoryItem>() {
+class CategoryDiff: DiffUtil.ItemCallback<CategoryItem>() {
 
     override fun areItemsTheSame(oldItem: CategoryItem, newItem: CategoryItem): Boolean {
         return oldItem === newItem
@@ -41,7 +42,7 @@ class CategoryDiff() : DiffUtil.ItemCallback<CategoryItem>() {
 }
 
 class CategoryViewHolder(
-    private val binding: ItemCategoryBinding
+    private val binding: ItemCategoryHorBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: CategoryItem, onClick: (CategoryItem) -> Unit) {

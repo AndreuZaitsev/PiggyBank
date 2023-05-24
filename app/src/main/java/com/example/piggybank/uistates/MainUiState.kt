@@ -1,4 +1,6 @@
-package com.example.piggybank
+package com.example.piggybank.uistates
+
+import com.example.piggybank.adapters.CategoryItem
 
 data class MainUiState(
     val balance: String = "0.0",

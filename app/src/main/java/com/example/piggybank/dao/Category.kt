@@ -1,4 +1,4 @@
-package com.example.piggybank
+package com.example.piggybank.dao
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao

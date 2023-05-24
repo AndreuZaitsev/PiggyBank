@@ -1,4 +1,4 @@
-package com.example.piggybank
+package com.example.piggybank.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
+import com.example.piggybank.adapters.CategoriesAdapter
+import com.example.piggybank.viewmodels.MainViewModel
+import com.example.piggybank.R
 import com.example.piggybank.databinding.MainFragmentBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

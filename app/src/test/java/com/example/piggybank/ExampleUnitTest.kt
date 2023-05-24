@@ -1,5 +1,6 @@
 package com.example.piggybank
 
+import com.example.piggybank.calculator.Calculator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

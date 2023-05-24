@@ -1,7 +1,13 @@
-package com.example.piggybank
+package com.example.piggybank.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.piggybank.R
+import com.example.piggybank.adapters.CategoryItem
+import com.example.piggybank.application.DataBaseHolder
+import com.example.piggybank.calculator.Calculator
+import com.example.piggybank.repository.CategoriesRepository
+import com.example.piggybank.uistates.MainUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

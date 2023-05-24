@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/splashFragment"
-            android:name="com.example.piggybank.SplashFragment"
+            android:name="com.example.piggybank.fragments.SplashFragment"
             android:label="SplashFragment"
             tools:layout="@layout/splash_fragment">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
             android:id="@+id/mainFragment"
-            android:name="com.example.piggybank.MainFragment"
+            android:name="com.example.piggybank.fragments.MainFragment"
             android:label="MainFragment"
             tools:layout="@layout/main_fragment">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
             android:id="@+id/addFragment"
-            android:name="com.example.piggybank.AddFragment"
+            android:name="com.example.piggybank.fragments.AddFragment"
             android:label="AddFragment"
             tools:layout="@layout/add_category"/>
 </navigation>

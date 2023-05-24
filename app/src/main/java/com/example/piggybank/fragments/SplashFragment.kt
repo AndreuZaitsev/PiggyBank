@@ -1,9 +1,10 @@
-package com.example.piggybank
+package com.example.piggybank.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.piggybank.R
 
 class SplashFragment : Fragment(R.layout.splash_fragment) {
 
