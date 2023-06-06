@@ -26,19 +26,17 @@ class CategoriesAdapter(
 
 data class CategoryItem(
     val name: String,
-    @DrawableRes val iconRes: Int,
+    @DrawableRes
+    val iconRes: Int,
     val isSelected: Boolean
 )
 
-class CategoryDiff: DiffUtil.ItemCallback<CategoryItem>() {
+class CategoryDiff : DiffUtil.ItemCallback<CategoryItem>() {
 
-    override fun areItemsTheSame(oldItem: CategoryItem, newItem: CategoryItem): Boolean {
-        return oldItem === newItem
-    }
+    override fun areItemsTheSame(oldItem: CategoryItem, newItem: CategoryItem): Boolean =
+        oldItem.iconRes == newItem.iconRes
 
-    override fun areContentsTheSame(oldItem: CategoryItem, newItem: CategoryItem): Boolean {
-        return oldItem == newItem
-    }
+    override fun areContentsTheSame(oldItem: CategoryItem, newItem: CategoryItem): Boolean = oldItem == newItem
 }
 
 class CategoryViewHolder(
@@ -50,7 +48,9 @@ class CategoryViewHolder(
         binding.ivIcon.setImageResource(item.iconRes)
         binding.ivIcon.background = if (item.isSelected) {
             ContextCompat.getDrawable(binding.root.context, R.drawable.bg_checked)
-        } else null
+        } else {
+            null
+        }
         binding.root.setOnClickListener {
             onClick.invoke(item)
         }

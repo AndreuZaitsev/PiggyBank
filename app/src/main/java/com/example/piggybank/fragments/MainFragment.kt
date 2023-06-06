@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State.STARTED
@@ -12,10 +13,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import com.example.piggybank.adapters.CategoriesAdapter
-import com.example.piggybank.viewmodels.MainViewModel
 import com.example.piggybank.R
+import com.example.piggybank.adapters.CategoriesAdapter
+import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.databinding.MainFragmentBinding
+import com.example.piggybank.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -27,11 +29,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter = CategoriesAdapter {
-        viewModel.onCategoryClicked(it)
+    private val adapter = CategoriesAdapter { clickedCategory ->
+        viewModel.onCategoryClicked(clickedCategory)
     }
+    private val snapHelper: SnapHelper = PagerSnapHelper()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,13 +42,15 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        snapHelper.attachToRecyclerView(null)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.listCategories.adapter = adapter
-        viewLifecycleOwner.lifecycleScope.launch {
 
+        viewModel.showCategories()
+
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(STARTED) {
                 viewModel.uiState.collect { uiState ->
                     adapter.submitList(uiState.categories)
@@ -61,10 +66,8 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-
-
-        val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.listCategories)
+        binding.listCategories.adapter = adapter
 
         setUpKeyboard()
     }

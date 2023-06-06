@@ -26,7 +26,7 @@ class MainViewModel : ViewModel() {
 
     private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
 
-    init {
+    fun showCategories() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(

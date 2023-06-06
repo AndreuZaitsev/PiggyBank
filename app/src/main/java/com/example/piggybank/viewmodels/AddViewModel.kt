@@ -5,10 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.piggybank.R
 import com.example.piggybank.adapters.AddCategoriesAdapter.AddCategoryItem
 import com.example.piggybank.application.DataBaseHolder
+import com.example.piggybank.dao.Category
 import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.uistates.AddUiState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,6 +20,12 @@ class AddViewModel : ViewModel() {
 
     private val _addUiState = MutableStateFlow(AddUiState())
     val addUiState: StateFlow<AddUiState> = _addUiState.asStateFlow()
+
+    private val _navigateToCategoryCreationEvent = MutableSharedFlow<Unit>()
+    val navigateToCategoryCreationEvent = _navigateToCategoryCreationEvent.asSharedFlow()
+
+    private val _showErrorEvent = MutableSharedFlow<String>()
+    val showErrorEvent = _showErrorEvent.asSharedFlow()
 
     private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
 
@@ -44,6 +53,50 @@ class AddViewModel : ViewModel() {
                     categories = categoryTemplates
                 )
             }
+        }
+    }
+
+    fun onCategoryClicked(item: AddCategoryItem) {
+        viewModelScope.launch {
+            updateCategorySelection(item)
+        }
+    }
+
+    fun onAddCategoryClicked(categoryName: String) {
+        viewModelScope.launch {
+            // validate name and show error via event aka navigation
+            if (categoryName.isEmpty()) {
+                _showErrorEvent.emit("Enter category name!")
+            } else {
+                val selectedCategory = _addUiState.value.categories.find {
+                    it.isSelected
+                }
+                if (selectedCategory == null) {
+                    _showErrorEvent.emit("Choose item category")
+                } else {
+                    val newCategory = selectedCategory.copy(name = categoryName)
+                    repository.saveCategory(Category(newCategory.name, newCategory.iconRes))
+                    _navigateToCategoryCreationEvent.emit(Unit)
+                }
+            }
+        }
+    }
+
+    private fun updateCategorySelection(item: AddCategoryItem) {
+        val categoriesToDisplay = if (item.isSelected) {
+            categoryTemplates
+        } else {
+            categoryTemplates.map {
+                if (item.iconRes == it.iconRes) {
+                    it.copy(isSelected = true)
+                } else {
+                    it
+                }
+            }
+        }
+
+        _addUiState.update { currentState ->
+            currentState.copy(categories = categoriesToDisplay)
         }
     }
 }

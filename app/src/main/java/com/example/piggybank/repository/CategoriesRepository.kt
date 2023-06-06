@@ -14,11 +14,11 @@ class CategoriesRepository(
 ) {
 
     private val initialCategories = listOf(
-        Category("car", R.drawable.ic_car,1),
-        Category("pet", R.drawable.ic_pet,2),
-        Category("alcohol", R.drawable.ic_alcohole,3),
-        Category("clothes", R.drawable.ic_clothes,4),
-        Category("food", R.drawable.ic_food,5)
+        Category("car", R.drawable.ic_car, 1),
+        Category("pet", R.drawable.ic_pet, 2),
+        Category("alcohol", R.drawable.ic_alcohole, 3),
+        Category("clothes", R.drawable.ic_clothes, 4),
+        Category("food", R.drawable.ic_food, 5)
     )
 
     init {
@@ -36,9 +36,10 @@ class CategoriesRepository(
             categoryDao.getAll()
         }
     }
-  /*   fun addCategory() {
-     CoroutineScope(Job() + Dispatchers.IO).launch {
-            categoryDao.insertOrIgnore(*addCategories.toTypedArray())
+
+    suspend fun saveCategory(category: Category) {
+        withContext(Dispatchers.IO) {
+            categoryDao.insertCategory(category)
         }
-    } */
+    }
 }

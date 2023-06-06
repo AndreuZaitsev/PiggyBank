@@ -26,6 +26,6 @@
     <fragment
             android:id="@+id/addFragment"
             android:name="com.example.piggybank.fragments.AddFragment"
-            android:label="AddFragment"
+            android:label=""
             tools:layout="@layout/add_category"/>
 </navigation>
