@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import android.widget.Toolbar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State.STARTED
@@ -73,6 +71,9 @@ class AddFragment : Fragment(R.layout.add_category) {
         binding.ivAddCategory.setOnClickListener {
             viewModel.onAddCategoryClicked(binding.etCategoryName.text.toString())
         }
+
        (requireActivity() as? MainActivity)?.setUpActionBar(binding.addToolbar)
+        binding.addToolbar.setNavigationIcon(R.drawable.ic_arrow_left_24dp)
+
     }
 }

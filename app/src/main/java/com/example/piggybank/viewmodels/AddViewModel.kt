@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.piggybank.R
 import com.example.piggybank.adapters.AddCategoriesAdapter.AddCategoryItem
 import com.example.piggybank.application.DataBaseHolder
-import com.example.piggybank.dao.Category
+import com.example.piggybank.dao.CategoryEntity
 import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.uistates.AddUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -75,7 +75,7 @@ class AddViewModel : ViewModel() {
                     _showErrorEvent.emit("Choose item category")
                 } else {
                     val newCategory = selectedCategory.copy(name = categoryName)
-                    repository.saveCategory(Category(newCategory.name, newCategory.iconRes))
+                    repository.saveCategory(CategoryEntity(newCategory.name, newCategory.iconRes))
                     _navigateToCategoryCreationEvent.emit(Unit)
                 }
             }

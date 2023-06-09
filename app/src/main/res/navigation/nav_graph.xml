@@ -22,10 +22,18 @@
         <action
                 android:id="@+id/action_mainFragment_to_addFragment"
                 app:destination="@id/addFragment" />
+        <action
+                android:id="@+id/action_mainFragment_to_addFundsFragment"
+                app:destination="@id/addFundsFragment" />
     </fragment>
     <fragment
             android:id="@+id/addFragment"
             android:name="com.example.piggybank.fragments.AddFragment"
             android:label=""
-            tools:layout="@layout/add_category"/>
+            tools:layout="@layout/add_category" />
+    <fragment
+            android:id="@+id/addFundsFragment"
+            android:name="com.example.piggybank.fragments.AddFundsFragment"
+            android:label=""
+            tools:layout="@layout/add_funds" />
 </navigation>

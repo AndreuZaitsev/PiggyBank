@@ -60,16 +60,30 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
         }
 
+        snapHelper.attachToRecyclerView(binding.listCategories)
+        binding.listCategories.adapter = adapter
+
+        setUpKeyboard()
+
+        binding.ivAddBalance.setOnClickListener {
+            viewModel.onAddBalanceClicked()
+        }
+
+       observeNavigationEvents()
+    }
+
+    private fun observeNavigationEvents() {
         viewModel.navigateToCategoryCreationEvent
             .onEach {
                 findNavController().navigate(R.id.action_mainFragment_to_addFragment)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        snapHelper.attachToRecyclerView(binding.listCategories)
-        binding.listCategories.adapter = adapter
-
-        setUpKeyboard()
+        viewModel.navigateToAddFundsEvent
+            .onEach {
+                findNavController().navigate(R.id.action_mainFragment_to_addFundsFragment)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun setUpKeyboard() {

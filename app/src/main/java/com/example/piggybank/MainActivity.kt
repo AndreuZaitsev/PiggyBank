@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setUpActionBar(toolbar: Toolbar) {
-        setSupportActionBar(toolbar)
+       setSupportActionBar(toolbar)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController.also {
-        appBarConfiguration = AppBarConfiguration(it.graph)
-        setupActionBarWithNavController(it, appBarConfiguration)
+            appBarConfiguration = AppBarConfiguration(it.graph)
+            setupActionBarWithNavController(it, appBarConfiguration)
         }
     }
 }

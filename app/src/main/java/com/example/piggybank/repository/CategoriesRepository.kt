@@ -1,7 +1,7 @@
 package com.example.piggybank.repository
 
 import com.example.piggybank.R
-import com.example.piggybank.dao.Category
+import com.example.piggybank.dao.CategoryEntity
 import com.example.piggybank.dao.CategoryDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,11 +14,11 @@ class CategoriesRepository(
 ) {
 
     private val initialCategories = listOf(
-        Category("car", R.drawable.ic_car, 1),
-        Category("pet", R.drawable.ic_pet, 2),
-        Category("alcohol", R.drawable.ic_alcohole, 3),
-        Category("clothes", R.drawable.ic_clothes, 4),
-        Category("food", R.drawable.ic_food, 5)
+        CategoryEntity("car", R.drawable.ic_car, 1),
+        CategoryEntity("pet", R.drawable.ic_pet, 2),
+        CategoryEntity("alcohol", R.drawable.ic_alcohole, 3),
+        CategoryEntity("clothes", R.drawable.ic_clothes, 4),
+        CategoryEntity("food", R.drawable.ic_food, 5)
     )
 
     init {
@@ -31,13 +31,13 @@ class CategoriesRepository(
         }
     }
 
-    suspend fun getCategories(): List<Category> {
+    suspend fun getCategories(): List<CategoryEntity> {
         return withContext(Dispatchers.IO) {
             categoryDao.getAll()
         }
     }
 
-    suspend fun saveCategory(category: Category) {
+    suspend fun saveCategory(category: CategoryEntity) {
         withContext(Dispatchers.IO) {
             categoryDao.insertCategory(category)
         }

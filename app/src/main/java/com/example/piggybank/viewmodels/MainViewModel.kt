@@ -7,6 +7,7 @@ import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.repository.CategoriesRepository
+import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.MainUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,14 +25,18 @@ class MainViewModel : ViewModel() {
     private val _navigateToCategoryCreationEvent = MutableSharedFlow<Unit>()
     val navigateToCategoryCreationEvent = _navigateToCategoryCreationEvent.asSharedFlow()
 
+    private val _navigateToAddFundsEvent = MutableSharedFlow<Unit>()
+    val navigateToAddFundsEvent = _navigateToAddFundsEvent.asSharedFlow()
+
     private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
+    private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
 
     fun showCategories() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
                     categories = loadCategoryItems(),
-                    balance = "xer"
+                    balance = loadBalance()
                 )
             }
         }
@@ -69,6 +74,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun onAddBalanceClicked() {
+        viewModelScope.launch {
+            _navigateToAddFundsEvent.emit(Unit)
+        }
+    }
+
     private suspend fun loadCategoryItems(): List<CategoryItem> {
         val categoryItems: MutableList<CategoryItem> = repository
             .getCategories()
@@ -79,5 +90,9 @@ class MainViewModel : ViewModel() {
 
         categoryItems.add(CategoryItem("add", R.drawable.ic_add, false))
         return categoryItems
+    }
+
+    private suspend fun loadBalance(): String {
+        return incomeRepository.getSumIncomes().toString()
     }
 }
