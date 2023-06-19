@@ -31,7 +31,12 @@ interface IncomeDao {
     @Query("SELECT total(income_value) FROM ${IncomeEntity.TABLE_NAME}")
     suspend fun sumIncomes(): Double
 
-    // TODO
+    @Query("DELETE FROM ${IncomeEntity.TABLE_NAME} WHERE id = :id")
+    suspend fun deleteIncome(id: Int)
+
+    @Query("SELECT * FROM ${IncomeEntity.TABLE_NAME}")
+    suspend fun getIncomes(): List<IncomeEntity>
+
     @Insert
     suspend fun saveIncome(vararg value: IncomeEntity)
 }

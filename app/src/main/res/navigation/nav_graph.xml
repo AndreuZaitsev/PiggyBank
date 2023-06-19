@@ -35,5 +35,14 @@
             android:id="@+id/addFundsFragment"
             android:name="com.example.piggybank.fragments.AddFundsFragment"
             android:label=""
-            tools:layout="@layout/add_funds" />
+            tools:layout="@layout/add_funds" >
+        <action
+                android:id="@+id/action_addFundsFragment_to_editIncomeFragment"
+                app:destination="@id/editIncomeFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/editIncomeFragment"
+            android:name="com.example.piggybank.fragments.EditIncomeFragment"
+            android:label="EditIncomeFragment"
+            tools:layout="@layout/edit_income"/>
 </navigation>

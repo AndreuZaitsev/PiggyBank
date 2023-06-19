@@ -9,10 +9,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.piggybank.MainActivity
 import com.example.piggybank.R
 import com.example.piggybank.databinding.AddFundsBinding
 import com.example.piggybank.viewmodels.AddFundsViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class AddFundsFragment : Fragment(R.layout.add_funds) {
@@ -36,11 +39,17 @@ class AddFundsFragment : Fragment(R.layout.add_funds) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as? MainActivity)?.setUpActionBar(binding.addFundsToolbar)
         binding.addFundsToolbar.setNavigationIcon(R.drawable.ic_arrow_left_24dp)
-
         setUpKeyboard()
+        binding.tvEdit.setOnClickListener {
+            viewModel.onEditClicked()
+        }
 
         viewModel.loadBalance()
+        observeUiState()
+        observeNavigationEvents()
+    }
 
+    private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -49,6 +58,14 @@ class AddFundsFragment : Fragment(R.layout.add_funds) {
                 }
             }
         }
+    }
+
+    private fun observeNavigationEvents() {
+        viewModel.navigateToEditIncomesScreenEvent
+            .onEach {
+                findNavController().navigate(R.id.action_addFundsFragment_to_editIncomeFragment)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun setUpKeyboard() {

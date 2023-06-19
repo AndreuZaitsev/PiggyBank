@@ -15,14 +15,14 @@ import com.example.piggybank.MainActivity
 import com.example.piggybank.R
 import com.example.piggybank.adapters.AddCategoriesAdapter
 import com.example.piggybank.databinding.AddCategoryBinding
-import com.example.piggybank.viewmodels.AddViewModel
+import com.example.piggybank.viewmodels.AddCategoryViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class AddFragment : Fragment(R.layout.add_category) {
 
-    private val viewModel: AddViewModel by viewModels()
+    private val viewModel: AddCategoryViewModel by viewModels()
 
     private var _binding: AddCategoryBinding? = null
     private val binding get() = _binding!!

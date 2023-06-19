@@ -15,9 +15,21 @@ class IncomeRepository(
         incomeDao.sumIncomes()
     }
 
-    suspend fun saveIncomeValue(incomeValue:IncomeEntity){
-        withContext(ioDispatcher){
+    suspend fun saveIncomeValue(incomeValue: IncomeEntity) {
+        withContext(ioDispatcher) {
             incomeDao.saveIncome(incomeValue)
+        }
+    }
+
+    suspend fun getIncomes(): List<IncomeEntity> {
+        return withContext(ioDispatcher) {
+            incomeDao.getIncomes()
+        }
+    }
+
+    suspend fun deleteIncome(id: Int) {
+        withContext(ioDispatcher) {
+            incomeDao.deleteIncome(id)
         }
     }
 }

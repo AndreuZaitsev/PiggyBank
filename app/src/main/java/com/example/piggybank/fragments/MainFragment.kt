@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State.STARTED
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoriesAdapter
-import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.databinding.MainFragmentBinding
 import com.example.piggybank.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -47,19 +45,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.showCategories()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    adapter.submitList(uiState.categories)
-                    binding.tvBalance.text = uiState.balance
-                    binding.keyboard.tvNumbers.text = uiState.keyboardInput
-                }
-            }
-        }
-
         snapHelper.attachToRecyclerView(binding.listCategories)
         binding.listCategories.adapter = adapter
 
@@ -69,7 +54,21 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             viewModel.onAddBalanceClicked()
         }
 
-       observeNavigationEvents()
+        viewModel.showCategories()
+        observeUiState()
+        observeNavigationEvents()
+    }
+
+    private fun observeUiState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    adapter.submitList(uiState.categories)
+                    binding.tvBalance.text = uiState.balance
+                    binding.keyboard.tvNumbers.text = uiState.keyboardInput
+                }
+            }
+        }
     }
 
     private fun observeNavigationEvents() {

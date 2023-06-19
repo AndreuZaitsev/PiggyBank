@@ -6,22 +6,11 @@
     <color name="accent">#fecc15</color>
     <color name="primary_text">#212121</color>
     <color name="expenses_item_name">#B35A6C83</color>
-    <color name="some_text">#5A6C83</color>
     <color name="secondary_text">#757575</color>
-    <color name="divider">#87E7FF</color>
+    <color name="divider">#D9DDDC</color>
     <color name="colorWhite">#ffffff</color>
 
-    <color name="color_pie1">#FECC15</color>
-    <color name="color_pie2">#F3994A</color>
-    <color name="color_pie3">#0194FF</color>
-    <color name="color_pie4">#F24922</color>
-    <color name="color_pie5">#AE01FF</color>
-    <color name="color_pie6">#66BB3D</color>
-    <color name="color_pie7">#6A05D0</color>
-    <color name="color_pie8">#2FCCFE</color>
-    <color name="color_pie9">#C9D913</color>
-    <color name="color_pie10">#4931F7</color>
-    <color name="color_pie11">#1DDBA2</color>
+    <color name="color_pie4">#FF0000</color>
     <color name="color_pie_value">#5A6C83</color>
     <color name="background_keyboard">#EDF2EF</color>
 

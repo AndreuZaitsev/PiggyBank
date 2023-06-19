@@ -7,9 +7,10 @@ import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.dao.IncomeEntity
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.AddFundsUIState
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,6 +19,9 @@ class AddFundsViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddFundsUIState())
     val uiState: StateFlow<AddFundsUIState> = _uiState.asStateFlow()
+
+    private val _navigateToEditIncomesScreenEvent = MutableSharedFlow<Unit>()
+    val navigateToEditIncomesScreenEvent = _navigateToEditIncomesScreenEvent.asSharedFlow()
 
     private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
 
@@ -71,5 +75,11 @@ class AddFundsViewModel : ViewModel() {
 
     private suspend fun saveIncome(income: IncomeEntity) {
         incomeRepository.saveIncomeValue(income)
+    }
+
+    fun onEditClicked(){
+       viewModelScope.launch {
+          _navigateToEditIncomesScreenEvent.emit(Unit)
+       }
     }
 }

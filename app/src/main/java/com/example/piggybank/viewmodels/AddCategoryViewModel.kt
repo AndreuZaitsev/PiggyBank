@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddViewModel : ViewModel() {
+class AddCategoryViewModel : ViewModel() {
 
     private val _addUiState = MutableStateFlow(AddUiState())
     val addUiState: StateFlow<AddUiState> = _addUiState.asStateFlow()
