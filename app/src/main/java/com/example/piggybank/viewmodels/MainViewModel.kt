@@ -28,6 +28,9 @@ class MainViewModel : ViewModel() {
     private val _navigateToAddFundsEvent = MutableSharedFlow<Unit>()
     val navigateToAddFundsEvent = _navigateToAddFundsEvent.asSharedFlow()
 
+    private val _navigateToExpensesStatEvent = MutableSharedFlow<Unit>()
+    val navigateToExpensesStatEvent = _navigateToExpensesStatEvent.asSharedFlow()
+
     private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
     private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
 
@@ -77,6 +80,12 @@ class MainViewModel : ViewModel() {
     fun onAddBalanceClicked() {
         viewModelScope.launch {
             _navigateToAddFundsEvent.emit(Unit)
+        }
+    }
+
+    fun onStatisticClicked(){
+        viewModelScope.launch {
+            _navigateToExpensesStatEvent.emit(Unit)
         }
     }
 

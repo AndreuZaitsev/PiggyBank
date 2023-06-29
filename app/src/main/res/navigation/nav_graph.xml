@@ -25,6 +25,9 @@
         <action
                 android:id="@+id/action_mainFragment_to_addFundsFragment"
                 app:destination="@id/addFundsFragment" />
+        <action
+                android:id="@+id/action_mainFragment_to_expensesStatFragment"
+                app:destination="@id/expensesStatFragment" />
     </fragment>
     <fragment
             android:id="@+id/addFragment"
@@ -45,4 +48,9 @@
             android:name="com.example.piggybank.fragments.EditIncomeFragment"
             android:label="EditIncomeFragment"
             tools:layout="@layout/edit_income"/>
+    <fragment
+            android:id="@+id/expensesStatFragment"
+            android:name="com.example.piggybank.fragments.ExpensesStatFragment"
+            android:label=""
+            tools:layout="@layout/expenses_stat"/>
 </navigation>

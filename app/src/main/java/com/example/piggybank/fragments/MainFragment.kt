@@ -54,6 +54,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             viewModel.onAddBalanceClicked()
         }
 
+        binding.tvStatistic.setOnClickListener {
+            viewModel.onStatisticClicked()
+        }
+
         viewModel.showCategories()
         observeUiState()
         observeNavigationEvents()
@@ -81,6 +85,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         viewModel.navigateToAddFundsEvent
             .onEach {
                 findNavController().navigate(R.id.action_mainFragment_to_addFundsFragment)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.navigateToExpensesStatEvent
+            .onEach {
+                findNavController().navigate(R.id.action_mainFragment_to_expensesStatFragment)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
