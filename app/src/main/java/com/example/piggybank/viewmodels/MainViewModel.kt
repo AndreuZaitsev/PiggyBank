@@ -7,6 +7,7 @@ import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.repository.CategoriesRepository
+import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.MainUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,8 +32,12 @@ class MainViewModel : ViewModel() {
     private val _navigateToExpensesStatEvent = MutableSharedFlow<Unit>()
     val navigateToExpensesStatEvent = _navigateToExpensesStatEvent.asSharedFlow()
 
+    private val _showErrorEvent = MutableSharedFlow<String>()
+    val showErrorEvent = _showErrorEvent.asSharedFlow()
+
     private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
     private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
+    private val expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     fun showCategories() {
         viewModelScope.launch {
@@ -86,6 +91,24 @@ class MainViewModel : ViewModel() {
     fun onStatisticClicked(){
         viewModelScope.launch {
             _navigateToExpensesStatEvent.emit(Unit)
+        }
+    }
+
+    fun onEnteredClicked(key: String){
+        viewModelScope.launch {
+            if(key.isEmpty()){
+                _showErrorEvent.emit("Wrong value")
+            } else {
+                val selectedCategory = _uiState.value.categories.find {
+                    it.isSelected
+                }
+                if(selectedCategory == null){
+                    _showErrorEvent.emit("Choose item category")
+                } else{
+                    val newExpense = selectedCategory.name
+                    expenseRepository.saveExpenseValue()
+                }
+            }
         }
     }
 

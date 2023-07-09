@@ -20,4 +20,10 @@ class ExpensesRepository(
             expensesDao.getExpenses()
         }
     }
+
+    suspend fun saveExpenseValue(expenseValue: ExpenseEntity){
+        withContext(ioDispatcher){
+            expensesDao.saveExpenses()
+        }
+    }
 }

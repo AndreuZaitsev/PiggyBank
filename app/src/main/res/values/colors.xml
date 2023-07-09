@@ -14,5 +14,7 @@
     <color name="color_pie_value">#5A6C83</color>
     <color name="background_keyboard">#EDF2EF</color>
 
+    <color name="selected_item">#00BFFF</color>
+
 
 </resources>

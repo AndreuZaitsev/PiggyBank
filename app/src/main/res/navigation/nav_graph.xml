@@ -31,7 +31,7 @@
     </fragment>
     <fragment
             android:id="@+id/addFragment"
-            android:name="com.example.piggybank.fragments.AddFragment"
+            android:name="com.example.piggybank.fragments.AddCategoryFragment"
             android:label=""
             tools:layout="@layout/add_category" />
     <fragment

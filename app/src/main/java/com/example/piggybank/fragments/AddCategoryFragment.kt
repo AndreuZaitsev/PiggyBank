@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddFragment : Fragment(R.layout.add_category) {
+class AddCategoryFragment : Fragment(R.layout.add_category) {
 
     private val viewModel: AddCategoryViewModel by viewModels()
 
