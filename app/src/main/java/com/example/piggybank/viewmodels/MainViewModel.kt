@@ -119,8 +119,8 @@ class MainViewModel : ViewModel() {
                     expenseRepository.saveExpenseValue(ExpenseEntity(System.currentTimeMillis(),
                         selectedCategory.name,
                         key))
+                    updateState()
                 }
-                updateState()
             }
         }
     }

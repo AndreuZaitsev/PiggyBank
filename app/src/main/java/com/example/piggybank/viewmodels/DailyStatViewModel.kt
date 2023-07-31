@@ -2,7 +2,7 @@ package com.example.piggybank.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.piggybank.adapters.ExpensesStatAdapter
+import com.example.piggybank.adapters.StatItem
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.repository.ExpensesRepository
@@ -15,35 +15,45 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ExpensesObject1ViewModel : ViewModel() {
+class DailyStatViewModel : ViewModel() {
 
     private val _expenseState = MutableStateFlow(ExpenseStatUiState())
     val expenseState: StateFlow<ExpenseStatUiState> = _expenseState.asStateFlow()
 
     private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
-
-    fun showExpenses(){
+    fun showExpenses() {
         viewModelScope.launch {
-            _expenseState.update { currentState->
+            _expenseState.update { currentState ->
                 currentState.copy(
                     expenses = loadExpenses()
                 )
             }
         }
     }
-    private suspend fun loadExpenses(): List<ExpensesStatAdapter.ExpenseItem> =
-        repository.getExpenses().map { it.toItem() }
 
-    private fun ExpensesStatAdapter.ExpenseItem.toEntity(): ExpenseEntity {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ROOT)
-        val timeMillis = dateFormat.parse(this.date)?.time ?: 0L
-        return ExpenseEntity(timeMillis, this.name, this.expenseValue.toString())
+    private suspend fun loadExpenses(): List<StatItem> =
+        repository.getExpenses()
+            .groupBy {
+                val day = it.dateInMls.toDateItem()
+                day
+            }
+            .flatMap {
+                val dateItem = it.key
+                val expenseItems = it.value.map { entity -> entity.toItem() }
+                val output = mutableListOf<StatItem>()
+                output += dateItem
+                output += expenseItems
+                output.toList()
+            }
+
+    private fun ExpenseEntity.toItem(): StatItem.ExpenseItem {
+        return StatItem.ExpenseItem(this.name, this.expensesValue.toDouble())
     }
 
-    private fun ExpenseEntity.toItem(): ExpensesStatAdapter.ExpenseItem {
+    private fun Long.toDateItem(): StatItem.DateItem {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ROOT)
-        val uiDate = dateFormat.format(this.dateInMls)
-        return ExpensesStatAdapter.ExpenseItem(this.name, uiDate, this.expensesValue.toDouble())
+        val uiDate = dateFormat.format(this)
+        return StatItem.DateItem(uiDate)
     }
 }

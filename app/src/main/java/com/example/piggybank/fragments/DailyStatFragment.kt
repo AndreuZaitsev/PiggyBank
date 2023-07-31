@@ -11,21 +11,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.piggybank.R
 import com.example.piggybank.adapters.ExpensesStatAdapter
-import com.example.piggybank.databinding.Fragment1Binding
-import com.example.piggybank.viewmodels.ExpensesObject1ViewModel
+import com.example.piggybank.databinding.DailyStatBinding
+import com.example.piggybank.viewmodels.DailyStatViewModel
 import kotlinx.coroutines.launch
 
-class ExpensesObjectFragment1 : Fragment(R.layout.fragment_1) {
+class DailyStatFragment : Fragment(R.layout.daily_stat) {
 
-    private val viewModel: ExpensesObject1ViewModel by viewModels()
+    private val viewModel: DailyStatViewModel by viewModels()
 
-    private var _binding: Fragment1Binding? = null
+    private var _binding: DailyStatBinding? = null
     private val binding get() = _binding!!
 
     private val adapter by lazy { ExpensesStatAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = Fragment1Binding.inflate(inflater, container, false)
+        _binding = DailyStatBinding.inflate(inflater, container, false)
         return binding.root
     }
 
