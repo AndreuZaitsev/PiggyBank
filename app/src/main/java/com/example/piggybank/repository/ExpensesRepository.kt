@@ -23,7 +23,7 @@ class ExpensesRepository(
 
     suspend fun saveExpenseValue(expenseValue: ExpenseEntity){
         withContext(ioDispatcher){
-            expensesDao.saveExpenses()
+            expensesDao.saveExpenses(expenseValue)
         }
     }
 }

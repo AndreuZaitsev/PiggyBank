@@ -1,6 +1,5 @@
 package com.example.piggybank.fragments
 
-import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.EditIncomeAdapter
@@ -17,6 +17,8 @@ import com.example.piggybank.adapters.IncomeItemTouchHelperCallback
 import com.example.piggybank.databinding.EditIncomeBinding
 import com.example.piggybank.viewmodels.EditIncomeViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class EditIncomeFragment : Fragment(R.layout.edit_income) {
@@ -42,6 +44,10 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
         binding.rvIncome.adapter = adapter
         viewModel.showIncomes()
 
+        binding.tvStatistic.setOnClickListener{
+            viewModel.onStatisticsClicked()
+        }
+
         val touchCallBack = IncomeItemTouchHelperCallback(adapter) {
             viewModel.onDelete(it.id)
             Snackbar
@@ -54,8 +60,16 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
         touchHelper.attachToRecyclerView(binding.rvIncome)
 
         observeUiState()
+        observeNavigationEvent()
     }
 
+    private fun observeNavigationEvent(){
+        viewModel.navigateToExpensesStatFragmentEvent
+            .onEach {
+                findNavController().navigate(R.id.action_editIncomeFragment_to_expensesStatFragment)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

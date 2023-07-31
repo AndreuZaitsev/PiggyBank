@@ -9,8 +9,11 @@ import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.EditIncomeUiState
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,6 +22,9 @@ class EditIncomeViewModel : ViewModel() {
 
     private val _incomeState = MutableStateFlow(EditIncomeUiState())
     val incomeState: StateFlow<EditIncomeUiState> = _incomeState.asStateFlow()
+
+    private val _navigateToExpensesStatFragmentEvent = MutableSharedFlow<Unit>()
+    val navigateToExpensesStatFragmentEvent: SharedFlow<Unit> = _navigateToExpensesStatFragmentEvent.asSharedFlow()
 
     private val repository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
 
@@ -49,6 +55,12 @@ class EditIncomeViewModel : ViewModel() {
                 showIncomes()
                 deletedIncome = null
             }
+        }
+    }
+
+    fun onStatisticsClicked(){
+        viewModelScope.launch {
+            _navigateToExpensesStatFragmentEvent.emit(Unit)
         }
     }
 

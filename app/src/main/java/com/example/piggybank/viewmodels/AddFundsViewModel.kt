@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.dao.IncomeEntity
+import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.AddFundsUIState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,6 +25,7 @@ class AddFundsViewModel : ViewModel() {
     val navigateToEditIncomesScreenEvent = _navigateToEditIncomesScreenEvent.asSharedFlow()
 
     private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
+    private val expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     fun onKeyClicked(key: String) {
         _uiState.update {
@@ -63,7 +65,7 @@ class AddFundsViewModel : ViewModel() {
     fun loadBalance(){
         viewModelScope.launch {
             _uiState.update {
-                val newBalance = incomeRepository.getSumIncomes()
+                val newBalance = incomeRepository.getSumIncomes() - expenseRepository.getSumExpenses()
                 it.copy(balance = newBalance.toString(), keyBoardInput = "")
             }
         }

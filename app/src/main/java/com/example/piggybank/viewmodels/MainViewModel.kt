@@ -6,6 +6,7 @@ import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.calculator.Calculator
+import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
@@ -78,6 +79,16 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             if (categoryItem.iconRes == R.drawable.ic_add) {
                 _navigateToCategoryCreationEvent.emit(Unit)
+            } else {
+                _uiState.update {
+                    it.copy(categories = it.categories.map { item ->
+                        if (item != categoryItem) {
+                            item.copy(isSelected = false)
+                        } else {
+                            item.copy(isSelected = true)
+                        }
+                    })
+                }
             }
         }
     }
@@ -88,30 +99,45 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun onStatisticClicked(){
+    fun onStatisticClicked() {
         viewModelScope.launch {
             _navigateToExpensesStatEvent.emit(Unit)
         }
     }
 
-    fun onEnteredClicked(key: String){
+    fun onEnteredClicked(key: String ) {
         viewModelScope.launch {
-            if(key.isEmpty()){
+            if (key.toString().isEmpty()) {
                 _showErrorEvent.emit("Wrong value")
             } else {
                 val selectedCategory = _uiState.value.categories.find {
                     it.isSelected
                 }
-                if(selectedCategory == null){
+                if (selectedCategory == null) {
                     _showErrorEvent.emit("Choose item category")
-                } else{
-                    val newExpense = selectedCategory.name
-                    expenseRepository.saveExpenseValue()
+                } else {
+                    expenseRepository.saveExpenseValue(ExpenseEntity(System.currentTimeMillis(),
+                        selectedCategory.name,
+                        key))
                 }
+                updateState()
             }
         }
     }
 
+    private fun updateState(){
+        viewModelScope.launch {
+            _uiState.update {currentState->
+                currentState.copy(
+                    categories = currentState.categories.map {
+                        it.copy(isSelected = false)
+                    },
+                    balance = loadBalance(),
+                    keyboardInput = ""
+                )
+            }
+        }
+    }
     private suspend fun loadCategoryItems(): List<CategoryItem> {
         val categoryItems: MutableList<CategoryItem> = repository
             .getCategories()
@@ -125,6 +151,9 @@ class MainViewModel : ViewModel() {
     }
 
     private suspend fun loadBalance(): String {
-        return incomeRepository.getSumIncomes().toString()
+        val expenses = expenseRepository.getSumExpenses()
+        val incomes = incomeRepository.getSumIncomes()
+        val balance = incomes.minus(expenses)
+        return balance.toString()
     }
 }
