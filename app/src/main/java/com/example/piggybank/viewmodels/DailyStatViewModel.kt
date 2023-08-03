@@ -35,8 +35,7 @@ class DailyStatViewModel : ViewModel() {
     private suspend fun loadExpenses(): List<StatItem> =
         repository.getExpenses()
             .groupBy {
-                val day = it.dateInMls.toDateItem()
-                day
+                it.dateInMls.toDateItem()
             }
             .flatMap {
                 val dateItem = it.key
