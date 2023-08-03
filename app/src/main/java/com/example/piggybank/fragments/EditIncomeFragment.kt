@@ -53,7 +53,8 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
             Snackbar
                 .make(binding.root, "Income Removed", Snackbar.LENGTH_LONG)
                 .setAction("UNDO"){
-                viewModel.onUndo()}
+                viewModel.onUndo()
+                }
                 .show()
         }
         val touchHelper = ItemTouchHelper(touchCallBack)

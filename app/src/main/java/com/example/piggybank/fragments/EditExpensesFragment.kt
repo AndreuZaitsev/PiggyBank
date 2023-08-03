@@ -10,10 +10,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.EditExpensesAdapter
+import com.example.piggybank.adapters.ExpenseItemTouchHelperCallBack
 import com.example.piggybank.databinding.EditExpenseBinding
 import com.example.piggybank.viewmodels.EditExpensesViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -45,6 +48,18 @@ class EditExpensesFragment : Fragment(R.layout.edit_expense) {
         binding.tvStatistic.setOnClickListener {
             viewModel.onStatisticsClicked()
         }
+        val touchCallBack = ExpenseItemTouchHelperCallBack(adapter) {
+            viewModel.onDelete(it.id)
+            Snackbar
+                .make(binding.root, "Expense Removed", Snackbar.LENGTH_LONG)
+                .setAction("UNDO") {
+                    viewModel.onUndo()
+                }
+                .show()
+        }
+
+        val touchHelper = ItemTouchHelper(touchCallBack)
+        touchHelper.attachToRecyclerView(binding.rvEditExpenses)
 
         observeUiState()
         observeNavigationEvents()

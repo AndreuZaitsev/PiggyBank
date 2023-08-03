@@ -34,6 +34,9 @@ interface ExpensesDao{
     @Query("SELECT * FROM ${ExpenseEntity.TABLE_NAME}")
     suspend fun getExpenses(): List<ExpenseEntity>
 
+    @Query("DELETE FROM ${ExpenseEntity.TABLE_NAME} WHERE id = :id")
+    suspend fun deleteExpense(id:Int)
+
     @Insert
     suspend fun saveExpenses(vararg value: ExpenseEntity)
 }

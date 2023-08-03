@@ -1,5 +1,6 @@
 package com.example.piggybank.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
@@ -30,7 +31,7 @@ class EditExpensesAdapter(
 
     class EditExpenseViewHolder(
         private val binding: EditExpenseItemBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root), ExpenseItemTouchHelperCallBack.ItemTouchViewHolder {
 
         fun bind(expenseItem: EditExpenseItem, onClick: (EditExpenseItem) -> Unit) {
             binding.tvExpenseName.text = expenseItem.name
@@ -39,6 +40,14 @@ class EditExpensesAdapter(
             binding.root.setOnClickListener {
                 onClick.invoke(expenseItem)
             }
+        }
+
+        override fun onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY)
+        }
+
+        override fun onItemCleared() {
+            itemView.setBackgroundColor(Color.WHITE)
         }
     }
 

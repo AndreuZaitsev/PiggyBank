@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EditExpensesViewModel: ViewModel() {
+class EditExpensesViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditExpensesUiState())
     val uiState: StateFlow<EditExpensesUiState> = _uiState.asStateFlow()
@@ -29,9 +29,11 @@ class EditExpensesViewModel: ViewModel() {
 
     private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
-    fun showExpenses(){
+    private var deletedExpense: EditExpensesAdapter.EditExpenseItem? = null
+
+    fun showExpenses() {
         viewModelScope.launch {
-            _uiState.update {currentState->
+            _uiState.update { currentState ->
                 currentState.copy(
                     expenses = loadExpenses()
                 )
@@ -39,7 +41,32 @@ class EditExpensesViewModel: ViewModel() {
         }
     }
 
-    private suspend fun loadExpenses():List<EditExpensesAdapter.EditExpenseItem> = repository.getExpenses().map { it.toItem() }
+    fun onDelete(id:Int){
+        viewModelScope.launch {
+            deletedExpense = uiState.value.expenses.find { it.id == id }
+            repository.deleteExpense(id)
+            showExpenses()
+        }
+    }
+
+    fun onUndo(){
+        viewModelScope.launch {
+            deletedExpense?.let {
+                repository.saveExpenseValue(it.toEntity()) // map ExpensesEntity
+                showExpenses()
+                deletedExpense = null
+            }
+        }
+    }
+
+    fun onStatisticsClicked() {
+        viewModelScope.launch {
+            _navigateToExpensesStatScreenEvent.emit(Unit)
+        }
+    }
+
+    private suspend fun loadExpenses(): List<EditExpensesAdapter.EditExpenseItem> =
+        repository.getExpenses().map { it.toItem() }
 
     private fun ExpenseEntity.toItem(): EditExpensesAdapter.EditExpenseItem {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ROOT)
@@ -47,9 +74,9 @@ class EditExpensesViewModel: ViewModel() {
         return EditExpensesAdapter.EditExpenseItem(this.id, this.name, uiDate, this.expensesValue.toDouble())
     }
 
-    fun onStatisticsClicked(){
-        viewModelScope.launch {
-            _navigateToExpensesStatScreenEvent.emit(Unit)
-        }
+    private fun EditExpensesAdapter.EditExpenseItem.toEntity(): ExpenseEntity {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ROOT)
+        val timeMillis = dateFormat.parse(this.date)?.time ?: 0L
+        return ExpenseEntity(timeMillis,this.name, this.expenseValue.toString(), this.id)
     }
 }

@@ -26,4 +26,10 @@ class ExpensesRepository(
             expensesDao.saveExpenses(expenseValue)
         }
     }
+
+    suspend fun deleteExpense(id: Int){
+        withContext(ioDispatcher){
+            expensesDao.deleteExpense(id)
+        }
+    }
 }
