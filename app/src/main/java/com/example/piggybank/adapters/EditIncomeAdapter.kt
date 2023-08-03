@@ -20,6 +20,14 @@ class EditIncomeAdapter(
         val isSelected: Boolean = false
     )
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditIncomeViewHolder {
+        val binding = ItemIncomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return EditIncomeViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: EditIncomeViewHolder, position: Int) {
+        holder.bind(getItem(position), onClick)
+    }
     class EditIncomeViewHolder(
         private val binding: ItemIncomeBinding
     ) : RecyclerView.ViewHolder(binding.root), IncomeItemTouchHelperCallback.ItemTouchViewHolder {
@@ -51,14 +59,5 @@ class EditIncomeAdapter(
         override fun areContentsTheSame(oldItem: EditIncomeItem, newItem: EditIncomeItem): Boolean {
             return oldItem == newItem
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditIncomeViewHolder {
-        val binding = ItemIncomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EditIncomeViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: EditIncomeViewHolder, position: Int) {
-        holder.bind(getItem(position), onClick)
     }
 }

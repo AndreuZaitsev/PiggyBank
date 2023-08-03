@@ -56,5 +56,18 @@
             android:id="@+id/expensesStatFragment"
             android:name="com.example.piggybank.fragments.ExpensesStatFragment"
             android:label=""
-            tools:layout="@layout/expenses_stat"/>
+            tools:layout="@layout/expenses_stat">
+        <action
+                android:id="@+id/action_expensesStatFragment_to_editExpensesFragment"
+                app:destination="@id/editExpensesFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/editExpensesFragment"
+            android:name="com.example.piggybank.fragments.EditExpensesFragment"
+            android:label=""
+            tools:layout="@layout/edit_expense">
+        <action
+                android:id="@+id/action_editExpensesFragment_to_expensesStatFragment"
+                app:destination="@id/expensesStatFragment" />
+    </fragment>
 </navigation>
