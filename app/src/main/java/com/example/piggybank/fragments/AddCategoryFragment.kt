@@ -11,9 +11,9 @@ import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.piggybank.MainActivity
 import com.example.piggybank.R
 import com.example.piggybank.adapters.AddCategoriesAdapter
+import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.AddCategoryBinding
 import com.example.piggybank.viewmodels.AddCategoryViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -40,8 +40,6 @@ class AddCategoryFragment : Fragment(R.layout.add_category) {
         super.onDestroyView()
         _binding = null
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,8 +70,6 @@ class AddCategoryFragment : Fragment(R.layout.add_category) {
             viewModel.onAddCategoryClicked(binding.etCategoryName.text.toString())
         }
 
-       (requireActivity() as? MainActivity)?.setUpActionBar(binding.addToolbar)
-        binding.addToolbar.setNavigationIcon(R.drawable.ic_arrow_left_24dp)
-
+        attachToolbarToMainActivity(binding.addToolbar, R.drawable.ic_arrow_left_24dp)
     }
 }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.EditExpensesAdapter
 import com.example.piggybank.adapters.ExpenseItemTouchHelperCallBack
+import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.EditExpenseBinding
 import com.example.piggybank.viewmodels.EditExpensesViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +42,9 @@ class EditExpensesFragment : Fragment(R.layout.edit_expense) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        attachToolbarToMainActivity(binding.editExpenseToolbar, R.drawable.ic_menu_black_24dp)
+
         binding.rvEditExpenses.adapter = adapter
 
         viewModel.showExpenses()

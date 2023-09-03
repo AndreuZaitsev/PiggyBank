@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.EditIncomeAdapter
 import com.example.piggybank.adapters.IncomeItemTouchHelperCallback
+import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.EditIncomeBinding
 import com.example.piggybank.viewmodels.EditIncomeViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +42,9 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        attachToolbarToMainActivity(binding.editIncomesToolbar, R.drawable.ic_menu_black_24dp)
+
         binding.rvIncome.adapter = adapter
         viewModel.showIncomes()
 

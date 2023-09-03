@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.example.piggybank.MainActivity
 import com.example.piggybank.R
 import com.example.piggybank.adapters.PageAdapter
+import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.ExpensesStatBinding
 import com.example.piggybank.viewmodels.ExpensesStatViewModel
 import com.google.android.material.tabs.TabLayout
@@ -41,8 +41,8 @@ class ExpensesStatFragment : Fragment(R.layout.expenses_stat) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (requireActivity() as? MainActivity)?.setUpActionBar(binding.statisticExpToolbar)
-        binding.statisticExpToolbar.setNavigationIcon(R.drawable.ic_arrow_left_24dp)
+        super.onViewCreated(view, savedInstanceState)
+        attachToolbarToMainActivity(binding.statisticExpToolbar, R.drawable.ic_arrow_left_24dp)
 
         binding.tvEdit.setOnClickListener {
             viewModel.onEditClicked()

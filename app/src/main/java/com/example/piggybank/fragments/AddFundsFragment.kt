@@ -10,8 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.piggybank.MainActivity
 import com.example.piggybank.R
+import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.AddFundsBinding
 import com.example.piggybank.viewmodels.AddFundsViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -37,8 +37,7 @@ class AddFundsFragment : Fragment(R.layout.add_funds) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as? MainActivity)?.setUpActionBar(binding.addFundsToolbar)
-        binding.addFundsToolbar.setNavigationIcon(R.drawable.ic_arrow_left_24dp)
+        attachToolbarToMainActivity(binding.addFundsToolbar, R.drawable.ic_arrow_left_24dp)
         setUpKeyboard()
         binding.tvEdit.setOnClickListener {
             viewModel.onEditClicked()

@@ -17,11 +17,11 @@
                 android:icon="@drawable/ic_expenses"
                 android:title="Edit expenses" />
         <item
-                android:id="@+id/aboutApp"
+                android:id="@+id/aboutAppFragment"
                 android:icon="@drawable/ic_about"
                 android:title="About App" />
         <item
-                android:id="@+id/FAQ"
+                android:id="@+id/faqFragment"
                 android:icon="@drawable/ic_faq"
                 android:title="FAQ" />
         <item
