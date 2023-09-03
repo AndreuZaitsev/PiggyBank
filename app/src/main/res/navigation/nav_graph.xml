@@ -17,7 +17,7 @@
     <fragment
             android:id="@+id/mainFragment"
             android:name="com.example.piggybank.fragments.MainFragment"
-            android:label="MainFragment"
+            android:label=""
             tools:layout="@layout/main_fragment">
         <action
                 android:id="@+id/action_mainFragment_to_addFragment"
@@ -28,6 +28,12 @@
         <action
                 android:id="@+id/action_mainFragment_to_expensesStatFragment"
                 app:destination="@id/expensesStatFragment" />
+        <action
+                android:id="@+id/action_mainFragment_to_aboutApp"
+                app:destination="@id/aboutApp" />
+        <action
+                android:id="@+id/action_mainFragment_to_FAQ"
+                app:destination="@id/FAQ" />
     </fragment>
     <fragment
             android:id="@+id/addFragment"
@@ -70,4 +76,12 @@
                 android:id="@+id/action_editExpensesFragment_to_expensesStatFragment"
                 app:destination="@id/expensesStatFragment" />
     </fragment>
+    <fragment
+            android:id="@+id/aboutApp"
+            android:name="com.example.piggybank.fragments.AboutApp"
+            android:label="AboutApp" />
+    <fragment
+            android:id="@+id/FAQ"
+            android:name="com.example.piggybank.fragments.FAQ"
+            android:label="FAQ" />
 </navigation>

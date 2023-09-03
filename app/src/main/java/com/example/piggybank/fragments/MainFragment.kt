@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
+import com.example.piggybank.MainActivity
 import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoriesAdapter
 import com.example.piggybank.databinding.MainFragmentBinding
@@ -64,6 +65,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 Toast.makeText(binding.root.context, it, Toast.LENGTH_SHORT).show()
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        (requireActivity() as? MainActivity)?.setUpActionBar(binding.toolbar)
+        binding.toolbar.setNavigationIcon(R.drawable.ic_menu_black_24dp)
 
         viewModel.showCategories()
         observeUiState()

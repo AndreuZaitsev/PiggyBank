@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/mainFragment"
+                android:icon="@drawable/ic_main"
+                android:title="Main" />
+        <item
+                android:id="@+id/editIncomeFragment"
+                android:icon="@drawable/ic_incomes"
+                android:title="Edit incomes" />
+        <item
+                android:id="@+id/editExpensesFragment"
+                android:icon="@drawable/ic_expenses"
+                android:title="Edit expenses" />
+        <item
+                android:id="@+id/aboutApp"
+                android:icon="@drawable/ic_about"
+                android:title="About App" />
+        <item
+                android:id="@+id/FAQ"
+                android:icon="@drawable/ic_faq"
+                android:title="FAQ" />
+        <item
+                android:id="@+id/splashFragment"
+                android:icon="@drawable/ic_premium"
+                android:title="Premium Account" />
+    </group>
+
+</menu>
