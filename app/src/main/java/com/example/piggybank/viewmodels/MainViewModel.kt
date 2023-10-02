@@ -1,10 +1,17 @@
 package com.example.piggybank.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.piggybank.CategoriesPrepopulate
 import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.application.DataBaseHolder
+import com.example.piggybank.application.MyApplication
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.repository.CategoriesRepository
@@ -19,7 +26,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    val application: MyApplication
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -36,11 +45,22 @@ class MainViewModel : ViewModel() {
     private val _showErrorEvent = MutableSharedFlow<String>()
     val showErrorEvent = _showErrorEvent.asSharedFlow()
 
-    private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
+    private val repository = CategoriesRepository(
+            DataBaseHolder.dataBase.categoryDao(),
+            DataBaseHolder.dataBase.expensesDao())
     private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
     private val expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
-    fun showCategories() {
+    init {
+        viewModelScope.launch {
+            CategoriesPrepopulate(
+                categoryDao = DataBaseHolder.dataBase.categoryDao(),
+                sharedPreferences = application.getSharedPreferences("Prefs", Context.MODE_PRIVATE)
+            ).prepopulate()
+        }
+    }
+
+    fun reloadState() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -93,6 +113,22 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun deleteCategory(categoryItem: CategoryItem) {
+        viewModelScope.launch {
+            val category = repository.getCategories().find {
+                it.iconResId == categoryItem.iconRes && it.name == categoryItem.name
+            }
+            if (category == null) {
+                _showErrorEvent.emit("Category wasn't found")
+            } else {
+                repository.deleteCategory(category)
+                reloadState()
+            }
+        }
+    }
+
+    fun isAddCategoryItem(categoryItem: CategoryItem) = categoryItem == addCategoryItem
+
     fun onAddBalanceClicked() {
         viewModelScope.launch {
             _navigateToAddFundsEvent.emit(Unit)
@@ -105,7 +141,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun onEnteredClicked(key: String ) {
+    fun onEnteredClicked(key: String) {
         viewModelScope.launch {
             if (key.toString().isEmpty()) {
                 _showErrorEvent.emit("Wrong value")
@@ -125,9 +161,9 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun updateState(){
+    private fun updateState() {
         viewModelScope.launch {
-            _uiState.update {currentState->
+            _uiState.update { currentState ->
                 currentState.copy(
                     categories = currentState.categories.map {
                         it.copy(isSelected = false)
@@ -138,6 +174,7 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
     private suspend fun loadCategoryItems(): List<CategoryItem> {
         val categoryItems: MutableList<CategoryItem> = repository
             .getCategories()
@@ -146,7 +183,7 @@ class MainViewModel : ViewModel() {
             }
             .toMutableList()
 
-        categoryItems.add(CategoryItem("add", R.drawable.ic_add, false))
+        categoryItems.add(addCategoryItem)
         return categoryItems
     }
 
@@ -155,5 +192,19 @@ class MainViewModel : ViewModel() {
         val incomes = incomeRepository.getSumIncomes()
         val balance = incomes.minus(expenses)
         return balance.toString()
+    }
+
+    companion object {
+
+        private val addCategoryItem = CategoryItem("add", R.drawable.ic_add, false)
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as MyApplication)
+                MainViewModel(
+                    application
+                )
+            }
+        }
     }
 }

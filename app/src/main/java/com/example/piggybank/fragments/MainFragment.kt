@@ -1,10 +1,12 @@
 package com.example.piggybank.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State.STARTED
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoriesAdapter
+import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.MainFragmentBinding
 import com.example.piggybank.viewmodels.MainViewModel
@@ -24,14 +27,21 @@ import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(R.layout.main_fragment) {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels{MainViewModel.Factory}
 
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter = CategoriesAdapter { clickedCategory ->
-        viewModel.onCategoryClicked(clickedCategory)
-    }
+    private val adapter = CategoriesAdapter(
+        onClick = { clickedCategory ->
+            viewModel.onCategoryClicked(clickedCategory)
+        },
+        onLongClick = {
+            if (!viewModel.isAddCategoryItem(it))
+                showCategoryDeletionDialog(it)
+        }
+    )
+
     private val snapHelper: SnapHelper = PagerSnapHelper()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -68,7 +78,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        viewModel.showCategories()
+        viewModel.reloadState()
         observeUiState()
         observeNavigationEvents()
     }
@@ -142,6 +152,21 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 viewModel.onEnteredClicked(binding.keyboard.tvNumbers.text.toString())
             }
         }
+    }
+
+    private fun showCategoryDeletionDialog(categoryItem: CategoryItem){
+        val builder = AlertDialog.Builder(requireActivity())
+        with(builder){
+            setTitle("Deletion Category")
+            setMessage("Deletion of category will delete the all previous expenses liked to it")
+            setPositiveButton("OK") { dialog, which ->
+                viewModel.deleteCategory(categoryItem)
+            }
+            setNegativeButton("CANCEL") { dialog, which ->
+                dialog.dismiss()
+            }
+        }
+        builder.show()
     }
 }
 

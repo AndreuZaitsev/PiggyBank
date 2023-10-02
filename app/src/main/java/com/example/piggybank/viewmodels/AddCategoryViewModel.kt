@@ -27,7 +27,7 @@ class AddCategoryViewModel : ViewModel() {
     private val _showErrorEvent = MutableSharedFlow<String>()
     val showErrorEvent = _showErrorEvent.asSharedFlow()
 
-    private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao())
+    private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao(), DataBaseHolder.dataBase.expensesDao())
 
     private val categoryTemplates = listOf(
         AddCategoryItem("cooking", R.drawable.ic_cooking),

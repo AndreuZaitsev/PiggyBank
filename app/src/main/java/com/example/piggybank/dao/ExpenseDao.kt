@@ -12,7 +12,7 @@ data class ExpenseEntity(
     @ColumnInfo(name = "date")
     val dateInMls: Long,
     @ColumnInfo(name = "name")
-    val name: String,
+    val categoryName: String,
     @ColumnInfo(name = "expenses_value")
     val expensesValue: String,
     @PrimaryKey(autoGenerate = true)
@@ -36,6 +36,9 @@ interface ExpensesDao{
 
     @Query("DELETE FROM ${ExpenseEntity.TABLE_NAME} WHERE id = :id")
     suspend fun deleteExpense(id:Int)
+
+    @Query("DELETE FROM ${ExpenseEntity.TABLE_NAME} WHERE name = :categoryName")
+    suspend fun deleteExpense(categoryName: String)
 
     @Insert
     suspend fun saveExpenses(vararg value: ExpenseEntity)

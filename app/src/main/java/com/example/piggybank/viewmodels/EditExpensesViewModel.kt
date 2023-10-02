@@ -3,10 +3,8 @@ package com.example.piggybank.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.adapters.EditExpensesAdapter
-import com.example.piggybank.adapters.EditIncomeAdapter
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.ExpenseEntity
-import com.example.piggybank.dao.IncomeEntity
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.uistates.EditExpensesUiState
 import java.text.SimpleDateFormat
@@ -71,7 +69,7 @@ class EditExpensesViewModel : ViewModel() {
     private fun ExpenseEntity.toItem(): EditExpensesAdapter.EditExpenseItem {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ROOT)
         val uiDate = dateFormat.format(this.dateInMls)
-        return EditExpensesAdapter.EditExpenseItem(this.id, this.name, uiDate, this.expensesValue.toDouble())
+        return EditExpensesAdapter.EditExpenseItem(this.id, this.categoryName, uiDate, this.expensesValue.toDouble())
     }
 
     private fun EditExpensesAdapter.EditExpenseItem.toEntity(): ExpenseEntity {

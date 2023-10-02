@@ -47,7 +47,7 @@ class DailyStatViewModel : ViewModel() {
             }
 
     private fun ExpenseEntity.toItem(): StatItem.ExpenseItem {
-        return StatItem.ExpenseItem(this.name, this.expensesValue.toDouble())
+        return StatItem.ExpenseItem(this.categoryName, this.expensesValue.toDouble())
     }
 
     private fun Long.toDateItem(): StatItem.DateItem {

@@ -9,7 +9,9 @@
     <color name="secondary_text">#757575</color>
     <color name="divider">#D9DDDC</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="black">#FF000000</color>
 
+    <color name="red">#F44336</color>
     <color name="color_pie4">#FF0000</color>
     <color name="color_pie_value">#5A6C83</color>
     <color name="background_keyboard">#EDF2EF</color>

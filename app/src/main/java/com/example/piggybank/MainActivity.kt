@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         when {
             drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.closeDrawer(GravityCompat.START)
-            navController.currentDestination?.id != R.id.mainFragment -> navController.popBackStack()
+           // navController.currentDestination?.id != R.id.mainFragment -> navController.popBackStack()
             else -> onBackPressedDispatcher.onBackPressed()
         }
     }

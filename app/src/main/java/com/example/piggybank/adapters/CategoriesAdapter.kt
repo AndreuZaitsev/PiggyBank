@@ -1,17 +1,24 @@
 package com.example.piggybank.adapters
 
+import android.app.ProgressDialog.show
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.core.app.DialogCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.piggybank.R
 import com.example.piggybank.databinding.ItemCategoryHorBinding
+import com.google.android.material.snackbar.Snackbar
 
 class CategoriesAdapter(
-    private val onClick: (CategoryItem) -> Unit = {}
+    private val onClick: (CategoryItem) -> Unit = {},
+    private val onLongClick: (CategoryItem)-> Unit = {}
 ) : ListAdapter<CategoryItem, CategoryViewHolder>(CategoryDiff()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -20,7 +27,7 @@ class CategoriesAdapter(
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.bind(getItem(position), onClick)
+        holder.bind(getItem(position), onClick, onLongClick)
     }
 }
 
@@ -43,7 +50,7 @@ class CategoryViewHolder(
     private val binding: ItemCategoryHorBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: CategoryItem, onClick: (CategoryItem) -> Unit) {
+    fun bind(item: CategoryItem, onClick: (CategoryItem) -> Unit, onLongClick: (CategoryItem) -> Unit) {
         binding.tvName.text = item.name
         binding.ivIcon.setImageResource(item.iconRes)
         binding.ivIcon.background = if (item.isSelected) {
@@ -53,6 +60,10 @@ class CategoryViewHolder(
         }
         binding.root.setOnClickListener {
             onClick.invoke(item)
+        }
+        binding.root.setOnLongClickListener {
+            onLongClick.invoke(item)
+            true
         }
     }
 }
