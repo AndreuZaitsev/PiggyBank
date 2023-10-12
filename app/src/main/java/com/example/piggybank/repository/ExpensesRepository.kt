@@ -1,14 +1,18 @@
 package com.example.piggybank.repository
 
+import com.example.piggybank.adapters.StatItem
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.dao.ExpensesDao
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ExpensesRepository(
     private val expensesDao: ExpensesDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun getSumExpenses(): Double = withContext(ioDispatcher) {
@@ -21,15 +25,23 @@ class ExpensesRepository(
         }
     }
 
-    suspend fun saveExpenseValue(expenseValue: ExpenseEntity){
-        withContext(ioDispatcher){
+    suspend fun saveExpenseValue(expenseValue: ExpenseEntity) {
+        withContext(ioDispatcher) {
             expensesDao.saveExpenses(expenseValue)
         }
     }
 
-    suspend fun deleteExpense(id: Int){
-        withContext(ioDispatcher){
+    suspend fun deleteExpense(id: Int) {
+        withContext(ioDispatcher) {
             expensesDao.deleteExpense(id)
+        }
+    }
+
+    suspend fun getExpensesByMonth(month: Int): List<ExpenseEntity> {
+        return withContext(ioDispatcher) {
+            getExpenses().filter {
+                Date(it.dateInMls).month == month
+            }
         }
     }
 }
