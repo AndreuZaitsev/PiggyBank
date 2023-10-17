@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.piggybank.adapters.MonthlyStatAdapter.MonthlyStatItem
+import com.example.piggybank.adapters.MonthlyStatAdapter.*
 import com.example.piggybank.databinding.ExpenseStatItemBinding
 
-class MonthlyStatAdapter : ListAdapter<MonthlyStatItem, MonthlyStatAdapter.MonthlyStatViewHolder>(MonthlyStatDiff()) {
+class MonthlyStatAdapter : ListAdapter<MonthlyStatItem, MonthlyStatViewHolder>(MonthlyStatDiff()) {
 
     data class MonthlyStatItem(
         val expensesColor: Int,
