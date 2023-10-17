@@ -6,7 +6,7 @@ import com.example.piggybank.adapters.StatItem
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.repository.ExpensesRepository
-import com.example.piggybank.uistates.ExpenseStatUiState
+import com.example.piggybank.uistates.DailyStatUIState
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,16 +17,17 @@ import kotlinx.coroutines.launch
 
 class DailyStatViewModel : ViewModel() {
 
-    private val _expenseState = MutableStateFlow(ExpenseStatUiState())
-    val expenseState: StateFlow<ExpenseStatUiState> = _expenseState.asStateFlow()
+    private val _dailyState = MutableStateFlow(DailyStatUIState())
+    val dailyState: StateFlow<DailyStatUIState> = _dailyState.asStateFlow()
 
     private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     fun showExpenses() {
         viewModelScope.launch {
-            _expenseState.update { currentState ->
+            _dailyState.update { currentState ->
+                val expenses = loadExpenses()
                 currentState.copy(
-                    expenses = loadExpenses()
+                    expenses = expenses
                 )
             }
         }
@@ -39,7 +40,20 @@ class DailyStatViewModel : ViewModel() {
             }
             .flatMap {
                 val dateItem = it.key
-                val expenseItems = it.value.map { entity -> entity.toItem() }
+                val expenseItems = it.value
+                    .map { entity -> entity.toItem() }
+                    .groupBy { expenseItem ->
+                        expenseItem.name
+                    }.mapValues { expenseValue ->
+                        val sumByCategory = expenseValue
+                            .value
+                            .sumOf { num -> num.expenseValue }
+                        sumByCategory
+                    }
+                    .toList()
+                    .map { expenseItem ->
+                        StatItem.ExpenseItem(expenseItem.first, expenseItem.second)
+                    }
                 val output = mutableListOf<StatItem>()
                 output += dateItem
                 output += expenseItems

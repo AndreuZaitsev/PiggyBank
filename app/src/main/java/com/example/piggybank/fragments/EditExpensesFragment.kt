@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,6 +19,7 @@ import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.EditExpenseBinding
 import com.example.piggybank.viewmodels.EditExpensesViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -72,9 +74,12 @@ class EditExpensesFragment : Fragment(R.layout.edit_expense) {
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    adapter.submitList(uiState.expenses)
-                }
+                viewModel.uiState
+                    .debounce(100)
+                    .collect { uiState ->
+                        adapter.submitList(uiState.expenses)
+                        binding.tvSpentNothing.isVisible = uiState.expenses.isEmpty()
+                    }
             }
         }
     }

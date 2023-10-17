@@ -1,6 +1,5 @@
 package com.example.piggybank.uistates
 
-import com.example.piggybank.adapters.MonthlyStatAdapter
 import com.example.piggybank.adapters.StatItem
 
 data class MonthlyStatUIState(

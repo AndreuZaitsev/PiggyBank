@@ -38,7 +38,7 @@ class DailyStatFragment : Fragment(R.layout.daily_stat) {
     private fun observeUiState(){
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.expenseState.collect{uiState->
+                viewModel.dailyState.collect{ uiState->
                     adapter.submitList(uiState.expenses)
                 }
             }

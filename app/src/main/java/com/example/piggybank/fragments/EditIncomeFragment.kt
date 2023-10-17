@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -18,6 +19,7 @@ import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.EditIncomeBinding
 import com.example.piggybank.viewmodels.EditIncomeViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -48,7 +50,7 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
         binding.rvIncome.adapter = adapter
         viewModel.showIncomes()
 
-        binding.tvStatistic.setOnClickListener{
+        binding.tvStatistic.setOnClickListener {
             viewModel.onStatisticsClicked()
         }
 
@@ -56,8 +58,8 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
             viewModel.onDelete(it.id)
             Snackbar
                 .make(binding.root, "Income Removed", Snackbar.LENGTH_LONG)
-                .setAction("UNDO"){
-                viewModel.onUndo()
+                .setAction("UNDO") {
+                    viewModel.onUndo()
                 }
                 .show()
         }
@@ -68,18 +70,22 @@ class EditIncomeFragment : Fragment(R.layout.edit_income) {
         observeNavigationEvent()
     }
 
-    private fun observeNavigationEvent(){
+    private fun observeNavigationEvent() {
         viewModel.navigateToExpensesStatFragmentEvent
             .onEach {
                 findNavController().navigate(R.id.action_editIncomeFragment_to_expensesStatFragment)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
+
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.incomeState.collect { uiState ->
+                viewModel.incomeState
+                    .debounce(100)
+                    .collect { uiState ->
                     adapter.submitList(uiState.incomes)
+                    binding.tvEmptyWallet.isVisible = uiState.incomes.isEmpty()
                 }
             }
         }

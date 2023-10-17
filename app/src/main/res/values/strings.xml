@@ -9,6 +9,7 @@
     <!-- RecyclerView -->
     <string name="add_category">Add Category</string>
     <string name="select_month">SELECT MONTH</string>
+    <string name="select_year">SELECT YEAR</string>
 
 
     <!-- Errors -->
@@ -22,6 +23,7 @@
     <string name="in_this_section_you_can_add_funds_to_your_budget">In this section you can add funds to your budget</string>
     <string name="manage_your_finances">MANAGE YOUR FINANCES</string>
     <string name="you_spent_nothing">YOU SPENT NOTHING</string>
+    <string name="your_wallet_is_empty">YOUR WALLET IS EMPTY</string>
     <string name="swipe_to_delete">Swipe to Delete</string>
 
     <string name="open_nav">Open Navigation Drawer</string>
