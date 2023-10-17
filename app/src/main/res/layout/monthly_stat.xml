@@ -3,20 +3,19 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/monthPikerButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="15dp"
             android:backgroundTint="@color/accent"
             android:text="@string/select_month"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:cornerRadius="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/currentMonth"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -24,12 +23,12 @@
 
     <TextView
             android:id="@+id/currentMonth"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@id/pieChart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/monthPikerButton"
@@ -38,8 +37,41 @@
     <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
             android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
+            android:layout_marginVertical="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/currentMonth" />
+
+    <TextView
+            android:id="@+id/tv_spentNothing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:drawableTop="@drawable/ic_pig_blue"
+            android:gravity="center"
+            android:text="@string/you_spent_nothing"
+            android:textColor="@color/primary_dark"
+            android:textSize="26sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currentMonth"
+            app:layout_constraintVertical_bias="0.4"
+            android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_monthlyExpenses"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pieChart"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/monthly_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

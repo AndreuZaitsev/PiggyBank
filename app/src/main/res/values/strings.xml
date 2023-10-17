@@ -21,6 +21,7 @@
     <string name="your_budget">YOUR BUDGET</string>
     <string name="in_this_section_you_can_add_funds_to_your_budget">In this section you can add funds to your budget</string>
     <string name="manage_your_finances">MANAGE YOUR FINANCES</string>
+    <string name="you_spent_nothing">YOU SPENT NOTHING</string>
     <string name="swipe_to_delete">Swipe to Delete</string>
 
     <string name="open_nav">Open Navigation Drawer</string>

@@ -9,25 +9,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.piggybank.R
+import com.example.piggybank.adapters.MonthlyStatAdapter
+import com.example.piggybank.adapters.MonthlyStatAdapter.MonthlyStatItem
 import com.example.piggybank.databinding.MonthlyStatBinding
 import com.example.piggybank.uistates.MonthlyStatUIState
 import com.example.piggybank.viewmodels.MonthlyStatViewModel
 import com.github.mikephil.charting.animation.Easing
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
-import java.text.SimpleDateFormat
+import java.math.RoundingMode
 import java.util.Calendar
 import java.util.Date
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
@@ -37,6 +41,8 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
     private var _binding: MonthlyStatBinding? = null
     private val binding get() = _binding!!
 
+    private val adapter by lazy { MonthlyStatAdapter() }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = MonthlyStatBinding.inflate(inflater, container, false)
         return binding.root
@@ -44,6 +50,7 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.rvMonthlyExpenses.adapter = adapter
         binding.monthPikerButton.setOnClickListener {
             setupDatePicker().show()
         }
@@ -78,7 +85,6 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
 
     private fun setUpPieChart() {
         binding.pieChart.apply {
-            setUsePercentValues(true)
             description.isEnabled = false
             setExtraOffsets(25f, 10f, 25f, 10f)
 
@@ -121,7 +127,7 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
         // on below line we are creating array list and
         // adding data to it to display in pie chart
         // on below line we are setting pie data set
-        val dataSet = PieDataSet(mutableListOf(), "Mobile OS").apply {
+        val dataSet = PieDataSet(mutableListOf(), "Monthly Expenses").apply {
             // on below line we are setting icons.
             setDrawIcons(false)
 
@@ -134,20 +140,21 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
 
         // on below line we are setting pie data set
         val data = PieData(dataSet).apply {
-            dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
-            dataSet.xValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            dataSet.colors = emptyList()
             dataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-            setValueTextSize(15f)
+            setValueTextSize(10f)
             setValueTypeface(Typeface.DEFAULT_BOLD)
             setValueTextColor(Color.BLACK)
         }
 
         binding.pieChart.apply {
             this.data = data
-            // undo all highlights
+
             data.setValueFormatter(PercentFormatter(this))
             this.setUsePercentValues(true)
 
+
+            // undo all highlights
             highlightValues(null)
 
             // loading chart
@@ -158,11 +165,20 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
     private fun observeUIState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    updatePieData(uiState)
-                    binding.pieChart.centerText = uiState.sumOfExpences
-                    binding.currentMonth.text = uiState.selectedDate
-                }
+                viewModel.uiState
+                    .debounce(100)
+                    .collect { uiState ->
+                        binding.currentMonth.text = uiState.selectedDate
+                        updatePieData(uiState)
+                        if (binding.pieChart.isEmpty) {
+                            binding.pieChart.centerText = ""
+                        } else {
+                            binding.pieChart.centerText = uiState.sumOfExpences
+                        }
+                        binding.tvSpentNothing.isVisible = uiState.expenses.isEmpty()
+                        binding.pieChart.showLegend()
+
+                    }
             }
         }
     }
@@ -176,9 +192,29 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
             pieEntries.forEach {
                 data.dataSet.addEntry(it)
             }
+            (data.dataSet as PieDataSet).colors = currentState.colors
             notifyDataSetChanged()
             invalidate()
         }
+    }
+
+    private fun PieChart.showLegend() {
+        val statItems: MutableList<MonthlyStatItem> = mutableListOf()
+
+        for (i in 0 until data.dataSet.entryCount) {
+            val color = data.dataSet.colors[i]
+            val entry = data.dataSet.getEntryForIndex(i)
+            val percentage = entry.y / data.yValueSum * 100f
+            val roundedPercentage = percentage.toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toDouble()
+            statItems += MonthlyStatItem(
+                expensesColor = color,
+                expensesName = entry.label,
+                expensesPercent = roundedPercentage,
+                expensesValue = entry.value,
+            )
+        }
+
+        adapter.submitList(statItems)
     }
 }
 

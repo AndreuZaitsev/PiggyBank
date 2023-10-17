@@ -2,12 +2,14 @@ package com.example.piggybank.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.piggybank.ColorfulPalletGenerator
 import com.example.piggybank.adapters.StatItem
 import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.uistates.MonthlyStatUIState
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.UUID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,25 +23,27 @@ class MonthlyStatViewModel : ViewModel() {
 
     private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
+    private val colorfulPallet = ColorfulPalletGenerator()
+
     fun onDateSelected(date: Date) {
         showData(date)
     }
 
-   private fun showData(date: Date) {
+    private fun showData(date: Date) {
         viewModelScope.launch {
             _uiState.update { currentState ->
-              val expenses = loadData(date.month)
+                val expenses = loadData(date.month)
                 currentState.copy(
                     expenses = expenses,
-                    sumOfExpences = expenses.sumOf { it.expenseValue}.toString(),
-                    selectedDate = SimpleDateFormat("MMMM, yyyy").format(date)
+                    sumOfExpences = expenses.sumOf { it.expenseValue }.toString(),
+                    selectedDate = SimpleDateFormat("MMMM, yyyy").format(date),
+                    colors = colorfulPallet.generateColors(expenses.size)
                 )
             }
         }
     }
 
-
-    private suspend fun loadData(month:Int): List<StatItem.ExpenseItem> =
+    private suspend fun loadData(month: Int): List<StatItem.ExpenseItem> =
         repository.getExpensesByMonth(month)
             .groupBy {
                 it.categoryName
