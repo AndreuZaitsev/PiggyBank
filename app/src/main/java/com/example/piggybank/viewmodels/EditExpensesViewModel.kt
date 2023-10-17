@@ -39,7 +39,7 @@ class EditExpensesViewModel : ViewModel() {
         }
     }
 
-    fun onDelete(id:Int){
+    fun onDelete(id: Int) {
         viewModelScope.launch {
             deletedExpense = uiState.value.expenses.find { it.id == id }
             repository.deleteExpense(id)
@@ -47,7 +47,7 @@ class EditExpensesViewModel : ViewModel() {
         }
     }
 
-    fun onUndo(){
+    fun onUndo() {
         viewModelScope.launch {
             deletedExpense?.let {
                 repository.saveExpenseValue(it.toEntity()) // map ExpensesEntity
@@ -75,6 +75,6 @@ class EditExpensesViewModel : ViewModel() {
     private fun EditExpensesAdapter.EditExpenseItem.toEntity(): ExpenseEntity {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ROOT)
         val timeMillis = dateFormat.parse(this.date)?.time ?: 0L
-        return ExpenseEntity(timeMillis,this.name, this.expenseValue.toString(), this.id)
+        return ExpenseEntity(timeMillis, this.name, this.expenseValue.toString(), this.id)
     }
 }

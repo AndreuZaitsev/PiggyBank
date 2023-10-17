@@ -6,11 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.piggybank.R
 import com.example.piggybank.adapters.MonthlyStatAdapter.MonthlyStatItem
-import com.example.piggybank.databinding.MonthlyItemBinding
+import com.example.piggybank.databinding.ExpenseStatItemBinding
 
-class MonthlyStatAdapter() : ListAdapter<MonthlyStatItem, MonthlyStatAdapter.MonthlyStatViewHolder>(MonthlyStatDiff()) {
+class MonthlyStatAdapter : ListAdapter<MonthlyStatItem, MonthlyStatAdapter.MonthlyStatViewHolder>(MonthlyStatDiff()) {
 
     data class MonthlyStatItem(
         val expensesColor: Int,
@@ -20,7 +19,7 @@ class MonthlyStatAdapter() : ListAdapter<MonthlyStatItem, MonthlyStatAdapter.Mon
     )
 
     class MonthlyStatViewHolder(
-        private val binding: MonthlyItemBinding,
+        private val binding: ExpenseStatItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(monthlyItem: MonthlyStatItem) {
@@ -32,7 +31,7 @@ class MonthlyStatAdapter() : ListAdapter<MonthlyStatItem, MonthlyStatAdapter.Mon
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthlyStatViewHolder {
-        val binding = MonthlyItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ExpenseStatItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MonthlyStatViewHolder(binding)
     }
 

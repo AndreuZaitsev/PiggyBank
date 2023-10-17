@@ -124,11 +124,8 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
             legend.isEnabled = false
             this.setDrawEntryLabels(false)
         }
-        // on below line we are creating array list and
-        // adding data to it to display in pie chart
-        // on below line we are setting pie data set
         val dataSet = PieDataSet(mutableListOf(), "Monthly Expenses").apply {
-            // on below line we are setting icons.
+
             setDrawIcons(false)
 
             // on below line we are setting slice for pie
@@ -152,6 +149,7 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
 
             data.setValueFormatter(PercentFormatter(this))
             this.setUsePercentValues(true)
+            //data.setDrawValues(maxVisibleCount < 15)
 
 
             // undo all highlights
@@ -193,6 +191,7 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
                 data.dataSet.addEntry(it)
             }
             (data.dataSet as PieDataSet).colors = currentState.colors
+            (data.dataSet as PieDataSet).setDrawValues(maxVisibleCount<=15)
             notifyDataSetChanged()
             invalidate()
         }
