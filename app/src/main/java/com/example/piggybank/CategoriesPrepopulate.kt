@@ -6,7 +6,7 @@ import com.example.piggybank.dao.CategoryEntity
 
 class CategoriesPrepopulate(
     private val categoryDao: CategoryDao,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
 ) {
 
     private val initialCategories = listOf(
@@ -30,7 +30,8 @@ class CategoriesPrepopulate(
         }
     }
 
-    companion object{
+    companion object {
+
         private const val PREF_KEY = "Is prepopulate"
     }
 }

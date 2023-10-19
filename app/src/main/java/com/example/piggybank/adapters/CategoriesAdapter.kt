@@ -56,8 +56,9 @@ class CategoryViewHolder(
         binding.ivIcon.background = if (item.isSelected) {
             ContextCompat.getDrawable(binding.root.context, R.drawable.bg_checked)
         } else {
-            null
+           null
         }
+
         binding.root.setOnClickListener {
             onClick.invoke(item)
         }

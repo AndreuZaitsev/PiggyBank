@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,6 +14,7 @@ import com.example.piggybank.R
 import com.example.piggybank.adapters.ExpensesStatAdapter
 import com.example.piggybank.databinding.DailyStatBinding
 import com.example.piggybank.viewmodels.DailyStatViewModel
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 class DailyStatFragment : Fragment(R.layout.daily_stat) {
@@ -35,12 +37,15 @@ class DailyStatFragment : Fragment(R.layout.daily_stat) {
         observeUiState()
     }
 
-    private fun observeUiState(){
+    private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.dailyState.collect{ uiState->
-                    adapter.submitList(uiState.expenses)
-                }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.dailyState
+                    .debounce(100)
+                    .collect { uiState ->
+                        adapter.submitList(uiState.expenses)
+                        binding.tvSpentNothing.isVisible = uiState.expenses.isEmpty()
+                    }
             }
         }
     }

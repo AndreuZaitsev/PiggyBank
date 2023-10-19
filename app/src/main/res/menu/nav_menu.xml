@@ -16,18 +16,6 @@
                 android:id="@+id/editExpensesFragment"
                 android:icon="@drawable/ic_expenses"
                 android:title="Edit expenses" />
-        <item
-                android:id="@+id/aboutAppFragment"
-                android:icon="@drawable/ic_about"
-                android:title="About App" />
-        <item
-                android:id="@+id/faqFragment"
-                android:icon="@drawable/ic_faq"
-                android:title="FAQ" />
-        <item
-                android:id="@+id/splashFragment"
-                android:icon="@drawable/ic_premium"
-                android:title="Premium Account" />
     </group>
 
 </menu>

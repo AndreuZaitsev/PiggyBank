@@ -31,7 +31,7 @@ class AddCategoriesAdapter(
         val isSelected: Boolean = false
     )
 
-    class AddCategoryDiff() : ItemCallback<AddCategoryItem>() {
+    class AddCategoryDiff : ItemCallback<AddCategoryItem>() {
 
         override fun areContentsTheSame(oldItem: AddCategoryItem, newItem: AddCategoryItem): Boolean {
             return oldItem == newItem

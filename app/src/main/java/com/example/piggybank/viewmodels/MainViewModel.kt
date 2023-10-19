@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    val application: MyApplication
+    val application: MyApplication,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -46,8 +46,8 @@ class MainViewModel(
     val showErrorEvent = _showErrorEvent.asSharedFlow()
 
     private val repository = CategoriesRepository(
-            DataBaseHolder.dataBase.categoryDao(),
-            DataBaseHolder.dataBase.expensesDao())
+        DataBaseHolder.dataBase.categoryDao(),
+        DataBaseHolder.dataBase.expensesDao())
     private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
     private val expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
@@ -102,11 +102,18 @@ class MainViewModel(
             } else {
                 _uiState.update {
                     it.copy(categories = it.categories.map { item ->
-                        if (item != categoryItem) {
-                            item.copy(isSelected = false)
-                        } else {
-                            item.copy(isSelected = true)
-                        }
+                        val isOn = if (item == categoryItem) !item.isSelected else false
+//                        val isOn2 =
+//                            if (item == categoryItem) {
+//                                if (item.isSelected) {
+//                                    false
+//                                } else {
+//                                    true
+//                                }
+//                            } else {
+//                                false
+//                            }
+                        item.copy(isSelected = isOn)
                     })
                 }
             }
@@ -143,7 +150,7 @@ class MainViewModel(
 
     fun onEnteredClicked(key: String) {
         viewModelScope.launch {
-            if (key.toString().isEmpty()) {
+            if (key.isEmpty()) {
                 _showErrorEvent.emit("Wrong value")
             } else {
                 val selectedCategory = _uiState.value.categories.find {
