@@ -17,6 +17,8 @@
     <color name="background_keyboard">#EDF2EF</color>
 
     <color name="selected_item">#00BFFF</color>
+    <color name="unselected_item">#b8dae6</color>
+
 
 
 </resources>
