@@ -15,102 +15,133 @@ val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).ro
 
 class DotsIndicatorDecoration(
     @ColorInt colorInactive: Int,
-    @ColorInt colorActive: Int
+    @ColorInt colorActive: Int,
 ) : RecyclerView.ItemDecoration() {
 
-    private val lineLength = 40.dp
-    private val indicatorHeight: Int = 20.dp
-    private val indicatorItemPadding: Int = 4.dp
-    private val radius: Int = 2.dp
     private val inactivePaint = Paint()
     private val activePaint = Paint()
+    private val RecyclerView.activePosition: Int
+        get() = when (val lm = layoutManager) {
+            is GridLayoutManager ->
+                lm.findFirstCompletelyVisibleItemPosition()
+                    .coerceAtLeast(0) / lm.spanCount
+
+            is LinearLayoutManager ->
+                lm.findFirstCompletelyVisibleItemPosition()
+
+            else ->
+                RecyclerView.NO_POSITION
+        }
+
+    private val RecyclerView.dotsCount: Int
+        get() {
+            val itemsCount = adapter?.itemCount ?: 0
+            if (cachedItemsCount == itemsCount) return cachedDotsCount
+            if (itemsCount <= 0) return 0
+
+            return when (val lm = layoutManager) {
+                is GridLayoutManager -> {
+                    val itemsOnPage =
+                        lm.findLastCompletelyVisibleItemPosition() -
+                        lm.findFirstCompletelyVisibleItemPosition() + 1
+
+                    val firstDot = 1
+                    val extraItems = itemsCount - itemsOnPage
+
+                    val wholeColumns = extraItems / lm.spanCount
+                    val partialColumns = extraItems % lm.spanCount
+
+                    firstDot + wholeColumns + partialColumns
+                }
+
+                else -> itemsCount
+            }.also {
+                cachedDotsCount = it
+                cachedItemsCount = itemsCount
+            }
+        }
+
+    private var cachedItemsCount = 0
+    private var cachedDotsCount = 0
 
     init {
         inactivePaint.style = Paint.Style.FILL
         inactivePaint.isAntiAlias = true
         inactivePaint.color = colorInactive
+
         activePaint.style = Paint.Style.FILL_AND_STROKE
         activePaint.strokeCap = Paint.Cap.ROUND
-        activePaint.strokeWidth = radius.toFloat() * 2
+        activePaint.strokeWidth = RADIUS.toFloat()
         activePaint.isAntiAlias = true
         activePaint.color = colorActive
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
-        val adapter = parent.adapter ?: return
-        val itemCount = adapter.itemCount
+
+        parent.adapter ?: return
+
+        val dotsCount = parent.dotsCount
 
         // center horizontally, calculate width and subtract half from center
-        val totalLength = (this.radius * 2 * itemCount).toFloat()
-        val paddingBetweenItems = (0.coerceAtLeast(itemCount - 1) * indicatorItemPadding).toFloat()
+        val totalLength = (RADIUS * 2 * dotsCount).toFloat()
+        val paddingBetweenItems =
+            (0.coerceAtLeast(dotsCount - 1) * INDICATOR_ITEM_PADDING).toFloat()
         val indicatorTotalWidth = totalLength + paddingBetweenItems
         val indicatorStartX = (parent.width - indicatorTotalWidth) / 2f
 
         // center vertically in the allotted space
-        val indicatorPosY = parent.height - indicatorHeight / 2f
+        val indicatorPosY = parent.height - INDICATOR_HEIGHT / 2f
 
-        val activePosition: Int = when (parent.layoutManager) {
-            is LinearLayoutManager -> {
-                (parent.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
-            }
-            else -> {
-                // not supported layout manager
-                return
-            }
-        }
-        if (activePosition == RecyclerView.NO_POSITION) {
-            return
-        }
-
-        drawInactiveDots(c, indicatorStartX, indicatorPosY, itemCount, activePosition)
-        drawActiveLine(c, indicatorStartX, indicatorPosY, activePosition)
+        drawInactiveDots(c, indicatorStartX, indicatorPosY, dotsCount, parent.activePosition)
+        drawActiveDot(c, indicatorStartX, indicatorPosY, parent.activePosition)
     }
 
     private fun drawInactiveDots(
         c: Canvas,
         indicatorStartX: Float,
         indicatorPosY: Float,
-        itemCount: Int,
+        dotsCount: Int,
         activeIndex: Int,
     ) {
         // width of item indicator including padding
-        val itemWidth = (this.radius * 2 + indicatorItemPadding).toFloat()
-        var start = indicatorStartX + radius
-        for (i in 0 until itemCount) {
-            if (i == activeIndex) {
-                start += lineLength / 2
-                continue
-            }
-            c.drawCircle(start, indicatorPosY, radius.toFloat(), inactivePaint)
-            start += itemWidth
+        val dotWidth = (RADIUS * 2 + INDICATOR_ITEM_PADDING).toFloat()
+        var start = indicatorStartX + RADIUS
+        for (i in 0 until dotsCount) {
+            //
+            c.drawCircle(start, indicatorPosY, RADIUS.toFloat(), inactivePaint)
+            start += dotWidth
         }
     }
 
-    private fun drawActiveLine(
-        c: Canvas, indicatorStartX: Float, indicatorPosY: Float,
-        highlightPosition: Int
+    private fun drawActiveDot(
+        c: Canvas,
+        indicatorStartX: Float,
+        indicatorPosY: Float,
+        highlightPosition: Int,
     ) {
         // width of item indicator including padding
-        val itemWidth = (lineLength + indicatorItemPadding).toFloat() / 2
-        val circleWidth = (radius * 2) + indicatorItemPadding
-        val highlightStart = indicatorStartX + circleWidth * highlightPosition + radius
-        c.drawLine(
-            highlightStart,
-            indicatorPosY,
-            highlightStart + itemWidth - indicatorItemPadding / 2,
-            indicatorPosY,
-            activePaint
-        )
+        val dotWidth = (RADIUS * 2) + INDICATOR_ITEM_PADDING
+        val dotOffset = dotWidth * highlightPosition
+        val highlightStart = indicatorStartX + RADIUS + dotOffset
+        c.drawCircle(highlightStart, indicatorPosY, RADIUS.toFloat(), activePaint)
     }
 
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
         parent: RecyclerView,
-        state: RecyclerView.State
+        state: RecyclerView.State,
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        outRect.bottom = indicatorHeight
+        outRect.bottom = INDICATOR_HEIGHT
+    }
+
+    companion object {
+
+        private val LINE_LENGTH = 0.dp
+        private val INDICATOR_HEIGHT: Int = 20.dp
+        private val INDICATOR_ITEM_PADDING: Int = 6.dp
+        private val RADIUS: Int = 4.dp
     }
 }

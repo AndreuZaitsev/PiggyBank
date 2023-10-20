@@ -61,7 +61,7 @@ class MainFragment : Fragment(layout.main_fragment) {
         super.onViewCreated(view, savedInstanceState)
         attachToolbarToMainActivity(binding.toolbar, drawable.ic_menu_black_24dp)
 
-        snapHelper.attachToRecyclerView(binding.listCategories)
+       snapHelper.attachToRecyclerView(binding.listCategories)
         binding.listCategories.adapter = adapter
         val rv = binding.listCategories
         with(rv){
