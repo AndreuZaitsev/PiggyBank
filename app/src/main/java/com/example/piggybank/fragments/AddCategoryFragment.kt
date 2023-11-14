@@ -45,20 +45,8 @@ class AddCategoryFragment : Fragment(R.layout.add_category) {
         super.onViewCreated(view, savedInstanceState)
         binding.addCategory.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-
-            viewLifecycleOwner.repeatOnLifecycle(STARTED) {
-                viewModel.addUiState.collect { uistate ->
-                    adapter.submitList(uistate.categories)
-                }
-            }
-        }
-
-        viewModel.navigateToCategoryCreationEvent
-            .onEach {
-                findNavController().popBackStack()
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+       observeUIState()
+       observeNavigationEvent()
 
         viewModel.showErrorEvent
             .onEach {
@@ -71,5 +59,24 @@ class AddCategoryFragment : Fragment(R.layout.add_category) {
         }
 
         attachToolbarToMainActivity(binding.addToolbar, R.drawable.ic_arrow_left_24dp)
+    }
+
+    private fun observeUIState(){
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            viewLifecycleOwner.repeatOnLifecycle(STARTED) {
+                viewModel.addUiState.collect { uistate ->
+                    adapter.submitList(uistate.categories)
+                }
+            }
+        }
+    }
+
+    private fun observeNavigationEvent(){
+        viewModel.navigateToCategoryCreationEvent
+            .onEach {
+                findNavController().popBackStack()
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 }

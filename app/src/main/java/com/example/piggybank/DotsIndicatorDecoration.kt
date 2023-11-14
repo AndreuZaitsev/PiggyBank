@@ -139,7 +139,6 @@ class DotsIndicatorDecoration(
 
     companion object {
 
-        private val LINE_LENGTH = 0.dp
         private val INDICATOR_HEIGHT: Int = 20.dp
         private val INDICATOR_ITEM_PADDING: Int = 6.dp
         private val RADIUS: Int = 4.dp

@@ -28,6 +28,9 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     val application: MyApplication,
+    private val repository: CategoriesRepository,
+    private val incomeRepository: IncomeRepository,
+    private val expenseRepository: ExpensesRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -44,12 +47,6 @@ class MainViewModel(
 
     private val _showErrorEvent = MutableSharedFlow<String>()
     val showErrorEvent = _showErrorEvent.asSharedFlow()
-
-    private val repository = CategoriesRepository(
-        DataBaseHolder.dataBase.categoryDao(),
-        DataBaseHolder.dataBase.expensesDao())
-    private val incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
-    private val expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     init {
         viewModelScope.launch {
@@ -103,16 +100,16 @@ class MainViewModel(
                 _uiState.update {
                     it.copy(categories = it.categories.map { item ->
                         val isOn = if (item == categoryItem) !item.isSelected else false
-//                        val isOn2 =
-//                            if (item == categoryItem) {
-//                                if (item.isSelected) {
-//                                    false
-//                                } else {
-//                                    true
-//                                }
-//                            } else {
-//                                false
-//                            }
+                        //                        val isOn2 =
+                        //                            if (item == categoryItem) {
+                        //                                if (item.isSelected) {
+                        //                                    false
+                        //                                } else {
+                        //                                    true
+                        //                                }
+                        //                            } else {
+                        //                                false
+                        //                            }
                         item.copy(isSelected = isOn)
                     })
                 }
@@ -209,7 +206,13 @@ class MainViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as MyApplication)
                 MainViewModel(
-                    application
+                    application,
+                    repository = CategoriesRepository(
+                        DataBaseHolder.dataBase.categoryDao(),
+                        DataBaseHolder.dataBase.expensesDao()
+                    ),
+                    incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao()),
+                    expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
                 )
             }
         }
