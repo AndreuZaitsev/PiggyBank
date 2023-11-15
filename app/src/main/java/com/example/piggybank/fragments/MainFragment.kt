@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.piggybank.DotsIndicatorDecoration
 import com.example.piggybank.R
-import com.example.piggybank.R.*
+import com.example.piggybank.R.color
+import com.example.piggybank.R.drawable
+import com.example.piggybank.R.layout
 import com.example.piggybank.adapters.CategoriesAdapter
 import com.example.piggybank.adapters.CategoryItem
 import com.example.piggybank.attachToolbarToMainActivity
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(layout.main_fragment) {
 
-    private val viewModel: MainViewModel by viewModels{MainViewModel.Factory}
+    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }
 
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
@@ -61,10 +63,10 @@ class MainFragment : Fragment(layout.main_fragment) {
         super.onViewCreated(view, savedInstanceState)
         attachToolbarToMainActivity(binding.toolbar, drawable.ic_menu_black_24dp)
 
-       snapHelper.attachToRecyclerView(binding.listCategories)
+        snapHelper.attachToRecyclerView(binding.listCategories)
         binding.listCategories.adapter = adapter
         val rv = binding.listCategories
-        with(rv){
+        with(rv) {
             adapter = adapter
             addItemDecoration(DotsIndicatorDecoration(
                 colorInactive = ContextCompat.getColor(context, color.unselected_item),
@@ -83,11 +85,7 @@ class MainFragment : Fragment(layout.main_fragment) {
             viewModel.onStatisticClicked()
         }
 
-        viewModel.showErrorEvent
-            .onEach {
-                Toast.makeText(binding.root.context, it, Toast.LENGTH_SHORT).show()
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+        observeErrorEvent()
 
         viewModel.reloadState()
         observeUiState()
@@ -104,6 +102,14 @@ class MainFragment : Fragment(layout.main_fragment) {
                 }
             }
         }
+    }
+
+    private fun observeErrorEvent() {
+        viewModel.showErrorEvent
+            .onEach {
+                Toast.makeText(binding.root.context, it, Toast.LENGTH_SHORT).show()
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun observeNavigationEvents() {
@@ -165,9 +171,9 @@ class MainFragment : Fragment(layout.main_fragment) {
         }
     }
 
-    private fun showCategoryDeletionDialog(categoryItem: CategoryItem){
+    private fun showCategoryDeletionDialog(categoryItem: CategoryItem) {
         val builder = AlertDialog.Builder(requireActivity())
-        with(builder){
+        with(builder) {
             setTitle("Deletion Category")
             setMessage("Deletion of category will delete the all previous expenses liked to it")
             setPositiveButton("OK") { _, _ ->

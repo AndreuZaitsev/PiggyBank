@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.piggybank.R
+import com.example.piggybank.SetupPieChartUseCase
 import com.example.piggybank.adapters.YearStatAdapter
 import com.example.piggybank.adapters.YearStatAdapter.YearStatItem
 import com.example.piggybank.databinding.YearStatBinding
@@ -43,6 +44,8 @@ class YearStatFragment : Fragment(R.layout.year_stat) {
 
     private val adapter by lazy { YearStatAdapter() }
 
+    private val setupPieChartUseCase = SetupPieChartUseCase()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = YearStatBinding.inflate(inflater, container, false)
         return binding.root
@@ -55,7 +58,7 @@ class YearStatFragment : Fragment(R.layout.year_stat) {
             setupDatePicker().show()
         }
         observeUiState()
-        setUpPieChart()
+        setupPieChartUseCase.invoke(binding.pieChart)
         viewModel.onDateSelected(Date())
     }
 
@@ -85,69 +88,6 @@ class YearStatFragment : Fragment(R.layout.year_stat) {
 
     private fun DatePickerDialog.hideMonthColumn() {
         this.datePicker.findViewById<NumberPicker>(resources.getIdentifier("month", "id", "android"))?.isGone = true
-    }
-
-    private fun setUpPieChart() {
-        binding.pieChart.apply {
-            description.isEnabled = false
-            setExtraOffsets(25f, 10f, 25f, 10f)
-
-
-            dragDecelerationFrictionCoef = 0.95f
-
-            isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
-
-            setTransparentCircleColor(Color.WHITE)
-            setTransparentCircleAlpha(110)
-
-
-            holeRadius = 55f
-            transparentCircleRadius = 60f
-
-
-            setDrawCenterText(true)
-            setCenterTextSize(25f)
-
-            rotationAngle = 0f
-
-            isRotationEnabled = true
-            isHighlightPerTapEnabled = true
-
-
-            animateY(1400, Easing.EaseInOutQuad)
-
-            legend.isEnabled = false
-            this.setDrawEntryLabels(false)
-        }
-        val dataSet = PieDataSet(mutableListOf(), "Year Expenses").apply {
-
-            setDrawIcons(false)
-
-            sliceSpace = 3f
-            iconsOffset = MPPointF(0f, 40f)
-            selectionShift = 5f
-
-        }
-
-        val data = PieData(dataSet).apply {
-            dataSet.colors = emptyList()
-            dataSet.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-            setValueTextSize(10f)
-            setValueTypeface(Typeface.DEFAULT_BOLD)
-            setValueTextColor(Color.BLACK)
-        }
-
-        binding.pieChart.apply {
-            this.data = data
-
-            data.setValueFormatter(PercentFormatter(this))
-            this.setUsePercentValues(true)
-
-            highlightValues(null)
-
-            invalidate()
-        }
     }
 
     private fun observeUiState() {
