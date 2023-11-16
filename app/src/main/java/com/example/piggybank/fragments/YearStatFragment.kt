@@ -1,8 +1,6 @@
 package com.example.piggybank.fragments
 
 import android.app.DatePickerDialog
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,24 +17,24 @@ import com.example.piggybank.SetupPieChartUseCase
 import com.example.piggybank.adapters.YearStatAdapter
 import com.example.piggybank.adapters.YearStatAdapter.YearStatItem
 import com.example.piggybank.databinding.YearStatBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.uistates.YearStatUIState
 import com.example.piggybank.viewmodels.YearStatViewModel
-import com.github.mikephil.charting.animation.Easing
+import com.example.piggybank.viewmodels.common.ViewModelFactory
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.MPPointF
 import java.math.RoundingMode
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
-class YearStatFragment : Fragment(R.layout.year_stat) {
+class YearStatFragment : BaseFragment(R.layout.year_stat) {
 
-    private val viewModel: YearStatViewModel by viewModels()
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: YearStatViewModel by viewModels(factoryProducer = { viewModelFactory })
 
     private var _binding: YearStatBinding? = null
     private val binding get() = _binding!!
@@ -45,6 +42,11 @@ class YearStatFragment : Fragment(R.layout.year_stat) {
     private val adapter by lazy { YearStatAdapter() }
 
     private val setupPieChartUseCase = SetupPieChartUseCase()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = YearStatBinding.inflate(inflater, container, false)
@@ -113,7 +115,6 @@ class YearStatFragment : Fragment(R.layout.year_stat) {
     private fun updatePieData(currentState: YearStatUIState) {
         val pieEntries = currentState.expenses
             .map { PieEntry(it.expenseValue.toFloat(), it.name) }
-
         binding.pieChart.apply {
             data.dataSet.clear()
             pieEntries.forEach {
@@ -141,7 +142,6 @@ class YearStatFragment : Fragment(R.layout.year_stat) {
                 expensesValue = entry.value,
             )
         }
-
         adapter.submitList(statItems)
     }
 }

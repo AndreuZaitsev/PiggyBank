@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.lifecycleScope
@@ -20,33 +19,43 @@ import com.example.piggybank.R
 import com.example.piggybank.R.color
 import com.example.piggybank.R.drawable
 import com.example.piggybank.R.layout
+import com.example.piggybank.activity.attachToolbarToMainActivity
 import com.example.piggybank.adapters.CategoriesAdapter
 import com.example.piggybank.adapters.CategoryItem
-import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.MainFragmentBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.MainViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class MainFragment : Fragment(layout.main_fragment) {
+class MainFragment : BaseFragment(layout.main_fragment) {
 
-    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: MainViewModel by viewModels(factoryProducer = { viewModelFactory })
 
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val adapter = CategoriesAdapter(
+    private val categoriesAdapter = CategoriesAdapter(
         onClick = { clickedCategory ->
             viewModel.onCategoryClicked(clickedCategory)
         },
         onLongClick = {
-            if (!viewModel.isAddCategoryItem(it))
+            if (!viewModel.isAddCategoryItem(it)) {
                 showCategoryDeletionDialog(it)
+            }
         }
     )
 
     private val snapHelper: SnapHelper = PagerSnapHelper()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = MainFragmentBinding.inflate(inflater, container, false)
@@ -63,31 +72,26 @@ class MainFragment : Fragment(layout.main_fragment) {
         super.onViewCreated(view, savedInstanceState)
         attachToolbarToMainActivity(binding.toolbar, drawable.ic_menu_black_24dp)
 
-        snapHelper.attachToRecyclerView(binding.listCategories)
-        binding.listCategories.adapter = adapter
-        val rv = binding.listCategories
-        with(rv) {
-            adapter = adapter
-            addItemDecoration(DotsIndicatorDecoration(
-                colorInactive = ContextCompat.getColor(context, color.unselected_item),
-                colorActive = ContextCompat.getColor(context, color.selected_item)
-            )
+        with(binding.listCategories) {
+            snapHelper.attachToRecyclerView(this)
+            adapter = categoriesAdapter
+            addItemDecoration(
+                DotsIndicatorDecoration(
+                    colorInactive = ContextCompat.getColor(context, color.unselected_item),
+                    colorActive = ContextCompat.getColor(context, color.selected_item)
+                )
             )
         }
 
         setUpKeyboard()
-
         binding.ivAddBalance.setOnClickListener {
             viewModel.onAddBalanceClicked()
         }
-
         binding.tvStatistic.setOnClickListener {
             viewModel.onStatisticClicked()
         }
-
-        observeErrorEvent()
-
         viewModel.reloadState()
+        observeErrorEvent()
         observeUiState()
         observeNavigationEvents()
     }
@@ -96,7 +100,7 @@ class MainFragment : Fragment(layout.main_fragment) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(STARTED) {
                 viewModel.uiState.collect { uiState ->
-                    adapter.submitList(uiState.categories)
+                    categoriesAdapter.submitList(uiState.categories)
                     binding.tvBalance.text = uiState.balance
                     binding.keyboard.tvNumbers.text = uiState.keyboardInput
                 }

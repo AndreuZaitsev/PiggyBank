@@ -5,13 +5,14 @@ import com.example.piggybank.R
 import com.example.piggybank.dao.CategoryDao
 import com.example.piggybank.dao.CategoryEntity
 import com.example.piggybank.dao.ExpensesDao
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CategoriesRepository(
+class CategoriesRepository @Inject constructor(
     private val categoryDao: CategoryDao,
     private val expensesDao: ExpensesDao
 ) {

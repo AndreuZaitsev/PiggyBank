@@ -4,23 +4,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.ColorfulPalletGenerator
 import com.example.piggybank.adapters.StatItem
-import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.uistates.MonthlyStatUIState
 import java.text.SimpleDateFormat
 import java.util.Date
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MonthlyStatViewModel : ViewModel() {
+class MonthlyStatViewModel @Inject constructor(
+    private val repository: ExpensesRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MonthlyStatUIState())
     val uiState: StateFlow<MonthlyStatUIState> = _uiState.asStateFlow()
-
-    private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     private val colorfulPallet = ColorfulPalletGenerator()
 

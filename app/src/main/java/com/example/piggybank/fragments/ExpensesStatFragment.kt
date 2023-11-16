@@ -11,17 +11,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.piggybank.R
 import com.example.piggybank.adapters.PageAdapter
-import com.example.piggybank.attachToolbarToMainActivity
+import com.example.piggybank.activity.attachToolbarToMainActivity
 import com.example.piggybank.databinding.ExpensesStatBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.ExpensesStatViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class ExpensesStatFragment : Fragment(R.layout.expenses_stat) {
-
-    private val viewModel: ExpensesStatViewModel by viewModels()
+class ExpensesStatFragment : BaseFragment(R.layout.expenses_stat) {
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: ExpensesStatViewModel by viewModels(factoryProducer = {viewModelFactory})
 
     private lateinit var expensesStatAdapter: PageAdapter
     private lateinit var viewPager: ViewPager2
@@ -29,6 +32,11 @@ class ExpensesStatFragment : Fragment(R.layout.expenses_stat) {
 
     private var _binding: ExpensesStatBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = ExpensesStatBinding.inflate(inflater, container, false)

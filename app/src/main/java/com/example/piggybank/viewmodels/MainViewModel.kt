@@ -2,22 +2,19 @@ package com.example.piggybank.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.piggybank.CategoriesPrepopulate
 import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoryItem
-import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.application.MyApplication
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.dao.ExpenseEntity
+import com.example.piggybank.database.DataBase
 import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.MainUiState
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,11 +23,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class MainViewModel(
-    val application: MyApplication,
+class MainViewModel @Inject constructor(
+    private val application: MyApplication,
     private val repository: CategoriesRepository,
     private val incomeRepository: IncomeRepository,
     private val expenseRepository: ExpensesRepository,
+    private val dataBase: DataBase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -51,7 +49,7 @@ class MainViewModel(
     init {
         viewModelScope.launch {
             CategoriesPrepopulate(
-                categoryDao = DataBaseHolder.dataBase.categoryDao(),
+                categoryDao = dataBase.categoryDao(),
                 sharedPreferences = application.getSharedPreferences("Prefs", Context.MODE_PRIVATE)
             ).prepopulate()
         }
@@ -201,20 +199,5 @@ class MainViewModel(
     companion object {
 
         private val addCategoryItem = CategoryItem("add", R.drawable.ic_add, false)
-
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as MyApplication)
-                MainViewModel(
-                    application,
-                    repository = CategoriesRepository(
-                        DataBaseHolder.dataBase.categoryDao(),
-                        DataBaseHolder.dataBase.expensesDao()
-                    ),
-                    incomeRepository = IncomeRepository(DataBaseHolder.dataBase.incomeDao()),
-                    expenseRepository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
-                )
-            }
-        }
     }
 }

@@ -5,32 +5,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.piggybank.R
+import com.example.piggybank.activity.attachToolbarToMainActivity
 import com.example.piggybank.adapters.AddCategoriesAdapter
-import com.example.piggybank.attachToolbarToMainActivity
 import com.example.piggybank.databinding.AddCategoryBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.AddCategoryViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddCategoryFragment : Fragment(R.layout.add_category) {
+class AddCategoryFragment : BaseFragment(R.layout.add_category) {
 
-    private val viewModel: AddCategoryViewModel by viewModels()
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: AddCategoryViewModel by viewModels(factoryProducer = { viewModelFactory })
 
     private var _binding: AddCategoryBinding? = null
+
     private val binding get() = _binding!!
 
     private val adapter = AddCategoriesAdapter {
         viewModel.onCategoryClicked(it)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = AddCategoryBinding.inflate(inflater, container, false)
         return binding.root

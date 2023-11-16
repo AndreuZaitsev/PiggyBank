@@ -3,12 +3,12 @@ package com.example.piggybank.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.adapters.EditExpensesAdapter
-import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.uistates.EditExpensesUiState
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,15 +17,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EditExpensesViewModel : ViewModel() {
+class EditExpensesViewModel @Inject constructor(
+    private val repository: ExpensesRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditExpensesUiState())
     val uiState: StateFlow<EditExpensesUiState> = _uiState.asStateFlow()
 
     private val _navigateToExpensesStatScreenEvent = MutableSharedFlow<Unit>()
     val navigateToExpensesStatScreenEvent = _navigateToExpensesStatScreenEvent.asSharedFlow()
-
-    private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     private var deletedExpense: EditExpensesAdapter.EditExpenseItem? = null
 

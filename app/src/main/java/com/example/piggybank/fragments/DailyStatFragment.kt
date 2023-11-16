@@ -13,18 +13,27 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.piggybank.R
 import com.example.piggybank.adapters.ExpensesStatAdapter
 import com.example.piggybank.databinding.DailyStatBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.DailyStatViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
+import javax.inject.Inject
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
-class DailyStatFragment : Fragment(R.layout.daily_stat) {
+class DailyStatFragment :BaseFragment(R.layout.daily_stat) {
 
-    private val viewModel: DailyStatViewModel by viewModels()
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: DailyStatViewModel by viewModels(factoryProducer = {viewModelFactory})
 
     private var _binding: DailyStatBinding? = null
     private val binding get() = _binding!!
 
     private val adapter by lazy { ExpensesStatAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DailyStatBinding.inflate(inflater, container, false)

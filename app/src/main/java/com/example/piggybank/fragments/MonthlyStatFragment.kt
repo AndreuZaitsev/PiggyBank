@@ -18,20 +18,24 @@ import com.example.piggybank.SetupPieChartUseCase
 import com.example.piggybank.adapters.MonthlyStatAdapter
 import com.example.piggybank.adapters.MonthlyStatAdapter.MonthlyStatItem
 import com.example.piggybank.databinding.MonthlyStatBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.uistates.MonthlyStatUIState
 import com.example.piggybank.viewmodels.MonthlyStatViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import java.math.RoundingMode
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
-class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
+class MonthlyStatFragment : BaseFragment(R.layout.monthly_stat) {
 
-    private val viewModel: MonthlyStatViewModel by viewModels()
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: MonthlyStatViewModel by viewModels(factoryProducer = {viewModelFactory})
 
     private var _binding: MonthlyStatBinding? = null
     private val binding get() = _binding!!
@@ -39,6 +43,11 @@ class MonthlyStatFragment : Fragment(R.layout.monthly_stat) {
     private val adapter by lazy { MonthlyStatAdapter() }
 
     private val setupPieChartUseCase = SetupPieChartUseCase()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = MonthlyStatBinding.inflate(inflater, container, false)

@@ -5,8 +5,14 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.piggybank.R
+import com.example.piggybank.fragments.common.BaseFragment
 
-class SplashFragment : Fragment(R.layout.splash_fragment) {
+class SplashFragment : BaseFragment(R.layout.splash_fragment) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -3,12 +3,12 @@ package com.example.piggybank.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.adapters.EditIncomeAdapter.EditIncomeItem
-import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.IncomeEntity
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.EditIncomeUiState
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,15 +18,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EditIncomeViewModel : ViewModel() {
+class EditIncomeViewModel @Inject constructor(
+    private val repository: IncomeRepository
+) : ViewModel() {
 
     private val _incomeState = MutableStateFlow(EditIncomeUiState())
     val incomeState: StateFlow<EditIncomeUiState> = _incomeState.asStateFlow()
 
     private val _navigateToExpensesStatFragmentEvent = MutableSharedFlow<Unit>()
     val navigateToExpensesStatFragmentEvent: SharedFlow<Unit> = _navigateToExpensesStatFragmentEvent.asSharedFlow()
-
-    private val repository = IncomeRepository(DataBaseHolder.dataBase.incomeDao())
 
     private var deletedIncome: EditIncomeItem? = null
 

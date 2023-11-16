@@ -3,24 +3,24 @@ package com.example.piggybank.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.adapters.StatItem
-import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.uistates.DailyStatUIState
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DailyStatViewModel : ViewModel() {
+class DailyStatViewModel @Inject constructor(
+    private val repository: ExpensesRepository
+) : ViewModel() {
 
     private val _dailyState = MutableStateFlow(DailyStatUIState())
     val dailyState: StateFlow<DailyStatUIState> = _dailyState.asStateFlow()
-
-    private val repository = ExpensesRepository(DataBaseHolder.dataBase.expensesDao())
 
     fun showExpenses() {
         viewModelScope.launch {

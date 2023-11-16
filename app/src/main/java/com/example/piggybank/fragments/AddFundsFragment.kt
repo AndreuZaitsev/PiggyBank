@@ -4,27 +4,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.piggybank.R
-import com.example.piggybank.attachToolbarToMainActivity
+import com.example.piggybank.activity.attachToolbarToMainActivity
 import com.example.piggybank.databinding.AddFundsBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.AddFundsViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddFundsFragment : Fragment(R.layout.add_funds) {
+class AddFundsFragment : BaseFragment(R.layout.add_funds) {
 
-    private val viewModel: AddFundsViewModel by viewModels()
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: AddFundsViewModel by viewModels (factoryProducer = {viewModelFactory})
 
     private var _binding: AddFundsBinding? = null
     private val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = AddFundsBinding.inflate(inflater, container, false)
         return binding.root

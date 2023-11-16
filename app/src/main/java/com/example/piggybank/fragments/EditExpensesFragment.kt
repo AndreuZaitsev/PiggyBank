@@ -15,23 +15,32 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.piggybank.R
 import com.example.piggybank.adapters.EditExpensesAdapter
 import com.example.piggybank.adapters.ExpenseItemTouchHelperCallBack
-import com.example.piggybank.attachToolbarToMainActivity
+import com.example.piggybank.activity.attachToolbarToMainActivity
 import com.example.piggybank.databinding.EditExpenseBinding
+import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.EditExpensesViewModel
+import com.example.piggybank.viewmodels.common.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class EditExpensesFragment : Fragment(R.layout.edit_expense) {
+class EditExpensesFragment : BaseFragment(R.layout.edit_expense) {
 
-    private val viewModel: EditExpensesViewModel by viewModels()
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: EditExpensesViewModel by viewModels(factoryProducer = {viewModelFactory})
 
     private var _binding: EditExpenseBinding? = null
     private val binding get() = _binding!!
 
     private val adapter by lazy { EditExpensesAdapter() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        injector.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = EditExpenseBinding.inflate(inflater, container, false)

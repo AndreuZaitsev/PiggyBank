@@ -1,21 +1,19 @@
 package com.example.piggybank.application
 
 import android.app.Application
-import androidx.room.Room
-import com.example.piggybank.database.DataBase
+import com.example.piggybank.common.dependencyInjection.app.AppComponent
+import com.example.piggybank.common.dependencyInjection.app.AppModule
+import com.example.piggybank.common.dependencyInjection.app.DaggerAppComponent
 
-class MyApplication: Application() {
+class MyApplication : Application() {
+
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build()
+    }
 
     override fun onCreate() {
         super.onCreate()
-        DataBaseHolder.dataBase = Room.databaseBuilder(
-            applicationContext,
-            DataBase::class.java, "data_base"
-        ).build()
     }
-}
-
-object DataBaseHolder {
-
-    lateinit var dataBase: DataBase
 }

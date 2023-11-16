@@ -1,8 +1,9 @@
 package com.example.piggybank
 
 import android.graphics.Color
+import javax.inject.Inject
 
-class ColorfulPalletGenerator {
+class ColorfulPalletGenerator @Inject constructor() {
 
     fun generateColors(number: Int): List<Int> {
         val colors: MutableList<Int> = mutableListOf()

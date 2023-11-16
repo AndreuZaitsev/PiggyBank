@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.R
 import com.example.piggybank.adapters.AddCategoriesAdapter.AddCategoryItem
-import com.example.piggybank.application.DataBaseHolder
 import com.example.piggybank.dao.CategoryEntity
 import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.uistates.AddUiState
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddCategoryViewModel : ViewModel() {
+class AddCategoryViewModel @Inject constructor(
+    private val repository: CategoriesRepository
+): ViewModel() {
 
     private val _addUiState = MutableStateFlow(AddUiState())
     val addUiState: StateFlow<AddUiState> = _addUiState.asStateFlow()
@@ -26,8 +28,6 @@ class AddCategoryViewModel : ViewModel() {
 
     private val _showErrorEvent = MutableSharedFlow<String>()
     val showErrorEvent = _showErrorEvent.asSharedFlow()
-
-    private val repository = CategoriesRepository(DataBaseHolder.dataBase.categoryDao(), DataBaseHolder.dataBase.expensesDao())
 
     private val categoryTemplates = listOf(
         AddCategoryItem("cooking", R.drawable.ic_cooking),
