@@ -3,8 +3,9 @@ package com.example.piggybank
 import android.content.SharedPreferences
 import com.example.piggybank.dao.CategoryDao
 import com.example.piggybank.dao.CategoryEntity
+import javax.inject.Inject
 
-class CategoriesPrepopulate(
+class CategoriesPrepopulate @Inject constructor(
     private val categoryDao: CategoryDao,
     private val sharedPreferences: SharedPreferences,
 ) {

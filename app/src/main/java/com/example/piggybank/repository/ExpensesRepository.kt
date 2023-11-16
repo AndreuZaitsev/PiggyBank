@@ -1,18 +1,17 @@
 package com.example.piggybank.repository
 
+import com.example.piggybank.common.dependencyInjection.dispatcher.IoDispatcher
 import com.example.piggybank.dao.ExpenseEntity
 import com.example.piggybank.dao.ExpensesDao
 import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ExpensesRepository @Inject constructor(
     private val expensesDao: ExpensesDao,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-
     suspend fun getSumExpenses(): Double = withContext(ioDispatcher) {
         expensesDao.sumExpenses()
     }

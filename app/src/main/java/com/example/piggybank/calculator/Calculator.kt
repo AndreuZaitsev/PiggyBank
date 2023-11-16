@@ -1,6 +1,8 @@
 package com.example.piggybank.calculator
 
-class Calculator {
+import javax.inject.Inject
+
+class Calculator @Inject constructor() {
 
     fun calculate(input: String): Double {
         val numbers = input.split("-", "+").map { it.toDoubleOrNull() ?: 0.0 }

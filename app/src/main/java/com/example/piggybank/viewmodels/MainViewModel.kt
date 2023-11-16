@@ -1,15 +1,12 @@
 package com.example.piggybank.viewmodels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.CategoriesPrepopulate
 import com.example.piggybank.R
 import com.example.piggybank.adapters.CategoryItem
-import com.example.piggybank.application.MyApplication
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.dao.ExpenseEntity
-import com.example.piggybank.database.DataBase
 import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
@@ -24,11 +21,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel @Inject constructor(
-    private val application: MyApplication,
     private val repository: CategoriesRepository,
     private val incomeRepository: IncomeRepository,
     private val expenseRepository: ExpensesRepository,
-    private val dataBase: DataBase,
+    private val categoriesPrepopulate: CategoriesPrepopulate,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -48,10 +44,7 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            CategoriesPrepopulate(
-                categoryDao = dataBase.categoryDao(),
-                sharedPreferences = application.getSharedPreferences("Prefs", Context.MODE_PRIVATE)
-            ).prepopulate()
+            categoriesPrepopulate.prepopulate()
         }
     }
 

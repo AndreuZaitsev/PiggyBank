@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.calculator.Calculator
 import com.example.piggybank.dao.IncomeEntity
-import com.example.piggybank.database.DataBase
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.AddFundsUIState
@@ -19,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class AddFundsViewModel @Inject constructor(
     private val incomeRepository: IncomeRepository,
-    private val expensesRepository: ExpensesRepository
+    private val expensesRepository: ExpensesRepository,
+    private val calculator: Calculator,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddFundsUIState())
@@ -63,7 +63,7 @@ class AddFundsViewModel @Inject constructor(
         }
     }
 
-    fun loadBalance(){
+    fun loadBalance() {
         viewModelScope.launch {
             _uiState.update {
                 val newBalance = incomeRepository.getSumIncomes() - expensesRepository.getSumExpenses()
@@ -73,16 +73,16 @@ class AddFundsViewModel @Inject constructor(
     }
 
     private fun String.calculateInput(): Double {
-        return Calculator().calculate(this)
+        return calculator.calculate(this)
     }
 
     private suspend fun saveIncome(income: IncomeEntity) {
         incomeRepository.saveIncomeValue(income)
     }
 
-    fun onEditClicked(){
-       viewModelScope.launch {
-          _navigateToEditIncomesScreenEvent.emit(Unit)
-       }
+    fun onEditClicked() {
+        viewModelScope.launch {
+            _navigateToEditIncomesScreenEvent.emit(Unit)
+        }
     }
 }

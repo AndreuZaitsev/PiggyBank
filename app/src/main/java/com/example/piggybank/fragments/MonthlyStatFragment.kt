@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -35,13 +34,11 @@ import kotlinx.coroutines.launch
 class MonthlyStatFragment : BaseFragment(R.layout.monthly_stat) {
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: MonthlyStatViewModel by viewModels(factoryProducer = {viewModelFactory})
+    private val viewModel: MonthlyStatViewModel by viewModels(factoryProducer = { viewModelFactory })
 
     private var _binding: MonthlyStatBinding? = null
     private val binding get() = _binding!!
-
     private val adapter by lazy { MonthlyStatAdapter() }
-
     private val setupPieChartUseCase = SetupPieChartUseCase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +57,6 @@ class MonthlyStatFragment : BaseFragment(R.layout.monthly_stat) {
         binding.monthPikerButton.setOnClickListener {
             setupDatePicker().show()
         }
-
         observeUIState()
         setupPieChartUseCase(binding.pieChart)
         viewModel.onDateSelected(Date())
