@@ -6,10 +6,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.piggybank.R
 import com.example.piggybank.fragments.common.BaseFragment
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 
 class SplashFragment : BaseFragment(R.layout.splash_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        FirebaseAnalytics.getInstance(requireContext()).logEvent("log_event", null)
         injector.inject(this)
         super.onCreate(savedInstanceState)
     }

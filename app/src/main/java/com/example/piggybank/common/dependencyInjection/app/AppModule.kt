@@ -8,13 +8,20 @@ import com.example.piggybank.dao.CategoryDao
 import com.example.piggybank.dao.ExpensesDao
 import com.example.piggybank.dao.IncomeDao
 import com.example.piggybank.database.DataBase
+import com.example.piggybank.remotedatasource.IRemoteCategories
+import com.example.piggybank.remotedatasource.IRemoteExpenses
+import com.example.piggybank.remotedatasource.IRemoteIncomes
+import com.example.piggybank.remotedatasource.RemoteCategories
+import com.example.piggybank.remotedatasource.RemoteExpenses
+import com.example.piggybank.remotedatasource.RemoteIncomes
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
 @Module
-class AppModule(val application: MyApplication) {
+class AppModule(private val application: MyApplication) {
 
     @Provides
     @AppScope
@@ -40,4 +47,16 @@ class AppModule(val application: MyApplication) {
     @Provides
     fun sharedPreferences(application: MyApplication): SharedPreferences =
         application.getSharedPreferences("Prefs", Context.MODE_PRIVATE)
+
+    @Provides
+    fun fireStore(): FirebaseFirestore = Firebase.firestore
+
+    @Provides
+    fun remoteCategories(fireStore: FirebaseFirestore): IRemoteCategories = RemoteCategories(fireStore)
+
+    @Provides
+    fun remoteIncomes(fireStore: FirebaseFirestore): IRemoteIncomes = RemoteIncomes(fireStore)
+
+    @Provides
+    fun remoteExpenses(fireStore: FirebaseFirestore): IRemoteExpenses = RemoteExpenses(fireStore)
 }

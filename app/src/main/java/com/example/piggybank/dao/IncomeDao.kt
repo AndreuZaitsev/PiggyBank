@@ -4,15 +4,17 @@ import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 
 @Entity(tableName = IncomeEntity.TABLE_NAME)
 data class IncomeEntity(
     @ColumnInfo(name = "date")
-    val timeInMillis: Long,
+    val timeInMillis: Long = 0L,
     @ColumnInfo(name = "income_value")
-    val incomeValue: Double,
+    val incomeValue: Double = 0.0,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo(name = "name")
@@ -38,5 +40,25 @@ interface IncomeDao {
     suspend fun getIncomes(): List<IncomeEntity>
 
     @Insert
-    suspend fun saveIncome(vararg value: IncomeEntity)
+    suspend fun saveIncome(vararg value: IncomeEntity): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(incomes: List<IncomeEntity>)
+
+    @Query("DELETE FROM ${IncomeEntity.TABLE_NAME}")
+    suspend fun deleteAll()
+
+    @Transaction
+    suspend fun overrideIncomesAndGet(incomes: List<IncomeEntity>): List<IncomeEntity> {
+        deleteAll()
+        insert(incomes)
+        return getIncomes()
+    }
+
+    @Transaction
+    suspend fun overrideIncomesAndSum(incomes: List<IncomeEntity>): Double {
+        deleteAll()
+        insert(incomes)
+        return sumIncomes()
+    }
 }

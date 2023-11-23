@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.piggybank.R
-import com.example.piggybank.adapters.PageAdapter
 import com.example.piggybank.activity.attachToolbarToMainActivity
+import com.example.piggybank.adapters.PageAdapter
 import com.example.piggybank.databinding.ExpensesStatBinding
 import com.example.piggybank.fragments.common.BaseFragment
 import com.example.piggybank.viewmodels.ExpensesStatViewModel
@@ -23,8 +22,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class ExpensesStatFragment : BaseFragment(R.layout.expenses_stat) {
+
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: ExpensesStatViewModel by viewModels(factoryProducer = {viewModelFactory})
+    private val viewModel: ExpensesStatViewModel by viewModels(factoryProducer = { viewModelFactory })
 
     private lateinit var expensesStatAdapter: PageAdapter
     private lateinit var viewPager: ViewPager2
@@ -64,11 +64,8 @@ class ExpensesStatFragment : BaseFragment(R.layout.expenses_stat) {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "DAY"
-
                 1 -> "MONTH"
-
                 2 -> "YEAR"
-
                 else -> "DAY"
             }
         }.attach()

@@ -1,14 +1,15 @@
 package com.example.piggybank
 
 import android.content.SharedPreferences
-import com.example.piggybank.dao.CategoryDao
 import com.example.piggybank.dao.CategoryEntity
+import com.example.piggybank.repository.CategoriesRepository
 import javax.inject.Inject
 
 class CategoriesPrepopulate @Inject constructor(
-    private val categoryDao: CategoryDao,
-    private val sharedPreferences: SharedPreferences,
+    private val repository: CategoriesRepository,
+    private val sharedPreferences: SharedPreferences
 ) {
+
 
     private val initialCategories = listOf(
         CategoryEntity("car", R.drawable.ic_car, 1),
@@ -21,9 +22,9 @@ class CategoriesPrepopulate @Inject constructor(
     suspend fun prepopulate() {
         val defValue = false
         val isPopulated = sharedPreferences.getBoolean(PREF_KEY, defValue)
-        if (!isPopulated) {
-            categoryDao.insertOrIgnore(*initialCategories.toTypedArray())
-
+        val noRemoteCategories = repository.getCategories()
+        if (!isPopulated && noRemoteCategories.isEmpty()) {
+            repository.savePrepopulate(initialCategories)
             with(sharedPreferences.edit()) {
                 putBoolean(PREF_KEY, true)
                 apply()
@@ -32,7 +33,6 @@ class CategoriesPrepopulate @Inject constructor(
     }
 
     companion object {
-
         private const val PREF_KEY = "Is prepopulate"
     }
 }

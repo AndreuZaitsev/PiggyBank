@@ -1,6 +1,7 @@
 package com.example.piggybank.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -14,6 +15,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.example.piggybank.R
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : BaseActivity() {
 
@@ -37,6 +41,10 @@ class MainActivity : BaseActivity() {
 
         navHostFragment.navController
     }
+
+    val db = Firebase.firestore
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injector.inject(this)
@@ -75,3 +83,12 @@ fun Fragment.attachToolbarToMainActivity(toolbar: Toolbar, @DrawableRes icon: In
     (requireActivity() as? MainActivity)?.setUpActionBar(toolbar)
     toolbar.setNavigationIcon(icon)
 }
+
+val user = hashMapOf(
+    "first" to "Ada",
+    "last" to "Lovelace",
+    "born" to 1815
+)
+val data = hashMapOf("city" to "Minsk")
+
+const val TAG = "Users"

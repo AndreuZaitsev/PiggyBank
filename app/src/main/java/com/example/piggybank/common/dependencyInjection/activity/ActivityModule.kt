@@ -7,7 +7,4 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-abstract class ActivityModule{
-
-
-}
+abstract class ActivityModule

@@ -72,9 +72,7 @@ class AddFundsViewModel @Inject constructor(
         }
     }
 
-    private fun String.calculateInput(): Double {
-        return calculator.calculate(this)
-    }
+    private fun String.calculateInput(): Double = calculator.calculate(this)
 
     private suspend fun saveIncome(income: IncomeEntity) {
         incomeRepository.saveIncomeValue(income)

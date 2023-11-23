@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddCategoryViewModel @Inject constructor(
-    private val repository: CategoriesRepository
-): ViewModel() {
+    private val repository: CategoriesRepository,
+) : ViewModel() {
 
     private val _addUiState = MutableStateFlow(AddUiState())
     val addUiState: StateFlow<AddUiState> = _addUiState.asStateFlow()
@@ -65,15 +65,22 @@ class AddCategoryViewModel @Inject constructor(
     fun onAddCategoryClicked(categoryName: String) {
         viewModelScope.launch {
             // validate name and show error via event aka navigation
-            if (categoryName.isEmpty()) {
-                _showErrorEvent.emit("Enter category name!")
-            } else {
-                val selectedCategory = _addUiState.value.categories.find {
-                    it.isSelected
+            val isNameExisted = repository.getCategories().any { it.name == categoryName }
+            val selectedCategory = _addUiState.value.categories.find { it.isSelected }
+            when {
+                categoryName.isEmpty() -> {
+                    _showErrorEvent.emit("Enter category name!")
                 }
-                if (selectedCategory == null) {
+
+                isNameExisted -> {
+                    _showErrorEvent.emit("This name is already exist!")
+                }
+
+                selectedCategory == null -> {
                     _showErrorEvent.emit("Choose item category")
-                } else {
+                }
+
+                else -> {
                     val newCategory = selectedCategory.copy(name = categoryName)
                     repository.saveCategory(CategoryEntity(newCategory.name, newCategory.iconRes))
                     _navigateToCategoryCreationEvent.emit(Unit)

@@ -12,6 +12,7 @@ import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.MainUiState
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,7 @@ class MainViewModel @Inject constructor(
     private val incomeRepository: IncomeRepository,
     private val expenseRepository: ExpensesRepository,
     private val categoriesPrepopulate: CategoriesPrepopulate,
+    private val calculator: Calculator,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
@@ -50,6 +52,7 @@ class MainViewModel @Inject constructor(
 
     fun reloadState() {
         viewModelScope.launch {
+
             _uiState.update { currentState ->
                 currentState.copy(
                     categories = loadCategoryItems(),
@@ -147,14 +150,19 @@ class MainViewModel @Inject constructor(
                 if (selectedCategory == null) {
                     _showErrorEvent.emit("Choose item category")
                 } else {
-                    expenseRepository.saveExpenseValue(ExpenseEntity(System.currentTimeMillis(),
+                    val newKey = _uiState.value.keyboardInput.calculateInput().toString()
+                    val expense = (ExpenseEntity(
+                        System.currentTimeMillis(),
                         selectedCategory.name,
-                        key))
+                        newKey))
+                    expenseRepository.saveExpenseValue(expense)
                     updateState()
                 }
             }
         }
     }
+
+    private fun String.calculateInput(): Double = calculator.calculate(this)
 
     private fun updateState() {
         viewModelScope.launch {
@@ -190,7 +198,6 @@ class MainViewModel @Inject constructor(
     }
 
     companion object {
-
         private val addCategoryItem = CategoryItem("add", R.drawable.ic_add, false)
     }
 }
