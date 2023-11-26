@@ -12,7 +12,6 @@ import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.MainUiState
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,12 +46,12 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             categoriesPrepopulate.prepopulate()
+            reloadState()
         }
     }
 
     fun reloadState() {
         viewModelScope.launch {
-
             _uiState.update { currentState ->
                 currentState.copy(
                     categories = loadCategoryItems(),
@@ -198,6 +197,7 @@ class MainViewModel @Inject constructor(
     }
 
     companion object {
+
         private val addCategoryItem = CategoryItem("add", R.drawable.ic_add, false)
     }
 }

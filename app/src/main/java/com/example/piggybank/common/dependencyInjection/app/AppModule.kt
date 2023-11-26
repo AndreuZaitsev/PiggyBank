@@ -17,6 +17,7 @@ import com.example.piggybank.remotedatasource.RemoteIncomes
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
@@ -50,13 +51,17 @@ class AppModule(private val application: MyApplication) {
 
     @Provides
     fun fireStore(): FirebaseFirestore = Firebase.firestore
+}
 
-    @Provides
-    fun remoteCategories(fireStore: FirebaseFirestore): IRemoteCategories = RemoteCategories(fireStore)
+@Module
+interface DataSourceModule {
 
-    @Provides
-    fun remoteIncomes(fireStore: FirebaseFirestore): IRemoteIncomes = RemoteIncomes(fireStore)
+    @Binds
+    fun remoteCategories(impl: RemoteCategories): IRemoteCategories
 
-    @Provides
-    fun remoteExpenses(fireStore: FirebaseFirestore): IRemoteExpenses = RemoteExpenses(fireStore)
+    @Binds
+    fun remoteIncomes(impl: RemoteIncomes): IRemoteIncomes
+
+    @Binds
+    fun remoteExpenses(impl: RemoteExpenses): IRemoteExpenses
 }

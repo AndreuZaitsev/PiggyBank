@@ -5,7 +5,9 @@ import com.example.piggybank.common.dependencyInjection.dispatcher.DispatcherMod
 import dagger.Component
 
 @AppScope
-@Component(modules = [AppModule::class, DispatcherModule::class])
+@Component(
+    modules = [AppModule::class, DispatcherModule::class, DataSourceModule::class]
+)
 interface AppComponent {
 
     fun newActivityComponentBuilder(): ActivityComponent.Builder

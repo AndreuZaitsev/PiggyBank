@@ -35,7 +35,7 @@ class CategoriesRepository @Inject constructor(
         withContext(ioDispatcher) {
             remoteCategories.deleteCategory(category)
             categoryDao.deleteCategory(category.id)
-            expensesRepository.deleteCategoryExpense(category.name)
+            expensesRepository.deleteExpensesByCategory(category.name)
         }
     }
 

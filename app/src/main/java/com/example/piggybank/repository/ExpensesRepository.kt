@@ -12,35 +12,35 @@ import kotlinx.coroutines.withContext
 class ExpensesRepository @Inject constructor(
     private val expensesDao: ExpensesDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val remoteExpenses: IRemoteExpenses,
+    private val remoteExpensesSource: IRemoteExpenses,
 ) {
 
     suspend fun getSumExpenses(): Double = withContext(ioDispatcher) {
-        expensesDao.overrideExpensesAndSum(remoteExpenses.getExpenses())
+        expensesDao.overrideExpensesAndSum(remoteExpensesSource.getExpenses())
     }
 
     suspend fun getExpenses(): List<ExpenseEntity> =
         withContext(ioDispatcher) {
-            expensesDao.overrideExpensesAndGet(remoteExpenses.getExpenses())
+            expensesDao.overrideExpensesAndGet(remoteExpensesSource.getExpenses())
         }
 
     suspend fun saveExpenseValue(expenseValue: ExpenseEntity) {
         withContext(ioDispatcher) {
-            val newId = expensesDao.saveExpenses(expenseValue)
+            val newId = expensesDao.insert(expenseValue)
                             .first().takeIf { it != -1L } ?: return@withContext
-            remoteExpenses.saveExpenses(expenseValue.copy(id = newId.toInt()))
+            remoteExpensesSource.saveExpenses(expenseValue.copy(id = newId.toInt()))
         }
     }
 
     suspend fun deleteExpense(id: Int) =
         withContext(ioDispatcher) {
-            remoteExpenses.deleteExpense(id)
-            expensesDao.deleteExpense(id)
+            remoteExpensesSource.deleteExpense(id)
+            expensesDao.deleteById(id)
         }
 
-    suspend fun deleteCategoryExpense(categoryName: String) = withContext(ioDispatcher) {
-        remoteExpenses.deleteCategoryExpense(categoryName)
-        expensesDao.deleteCategoryExpense(categoryName)
+    suspend fun deleteExpensesByCategory(categoryName: String) = withContext(ioDispatcher) {
+        remoteExpensesSource.deleteExpensesByCategory(categoryName)
+        expensesDao.deleteExpensesByCategory(categoryName)
     }
 
     suspend fun getExpensesByMonth(month: Int): List<ExpenseEntity> {

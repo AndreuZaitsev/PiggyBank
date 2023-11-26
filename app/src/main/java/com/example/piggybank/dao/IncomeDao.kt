@@ -39,7 +39,7 @@ interface IncomeDao {
     @Query("SELECT * FROM ${IncomeEntity.TABLE_NAME}")
     suspend fun getIncomes(): List<IncomeEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveIncome(vararg value: IncomeEntity): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

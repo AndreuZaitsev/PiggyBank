@@ -35,22 +35,22 @@ interface ExpensesDao {
     suspend fun sumExpenses(): Double
 
     @Query("SELECT * FROM ${ExpenseEntity.TABLE_NAME}")
-    suspend fun getExpenses(): List<ExpenseEntity>
+    suspend fun getAll(): List<ExpenseEntity>
 
     @Query("DELETE FROM ${ExpenseEntity.TABLE_NAME} WHERE id = :id")
-    suspend fun deleteExpense(id: Int)
+    suspend fun deleteById(id: Int)
 
     @Query("DELETE FROM ${ExpenseEntity.TABLE_NAME} WHERE name = :categoryName")
-    suspend fun deleteCategoryExpense(categoryName: String)
+    suspend fun deleteExpensesByCategory(categoryName: String)
 
     @Query("DELETE FROM ${ExpenseEntity.TABLE_NAME}")
     suspend fun deleteAll()
 
-    @Insert
-    suspend fun saveExpenses(vararg value: ExpenseEntity): List<Long>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(vararg value: ExpenseEntity): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExpenses(expenses: List<ExpenseEntity>)
+    suspend fun insert(expenses: List<ExpenseEntity>)
 
     @Update
     suspend fun update(expenses: List<ExpenseEntity>)
@@ -58,14 +58,14 @@ interface ExpensesDao {
     @Transaction
     suspend fun overrideExpensesAndGet(expenses: List<ExpenseEntity>): List<ExpenseEntity> {
         deleteAll()
-        insertExpenses(expenses)
-        return getExpenses()
+        insert(expenses)
+        return getAll()
     }
 
     @Transaction
     suspend fun overrideExpensesAndSum(expenses: List<ExpenseEntity>): Double {
         deleteAll()
-        insertExpenses(expenses)
+        insert(expenses)
         return sumExpenses()
     }
 

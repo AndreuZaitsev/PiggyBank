@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import com.example.piggybank.dao.CategoryEntity
 import com.example.piggybank.repository.CategoriesRepository
 import javax.inject.Inject
+import timber.log.Timber
 
 class CategoriesPrepopulate @Inject constructor(
     private val repository: CategoriesRepository,

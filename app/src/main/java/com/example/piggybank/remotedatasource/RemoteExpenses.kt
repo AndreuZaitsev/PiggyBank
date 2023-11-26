@@ -10,7 +10,7 @@ interface IRemoteExpenses {
     suspend fun saveExpenses(expense: ExpenseEntity)
     suspend fun getExpenses(): List<ExpenseEntity>
     suspend fun deleteExpense(id: Int)
-    suspend fun deleteCategoryExpense(categoryName: String)
+    suspend fun deleteExpensesByCategory(categoryName: String)
 }
 
 class RemoteExpenses @Inject constructor(
@@ -37,19 +37,23 @@ class RemoteExpenses @Inject constructor(
             .await()
             .firstOrNull()
             ?.id
-        docIdToDelete?.let { collectionRef.document(it).delete() }
+
+        docIdToDelete?.let { deleteDocument(it) }
     }
 
-    override suspend fun deleteCategoryExpense(categoryName: String) {
+    override suspend fun deleteExpensesByCategory(categoryName: String) {
         val remoteExpenses = getExpenses()
-        val expenseToDelete = remoteExpenses.find {
-            it.categoryName == categoryName
-        }
-        expenseToDelete?.let {
-            collectionRef
-                .document(it.toDocumentName())
-                .delete()
-        }
+        remoteExpenses
+            .filter { it.categoryName == categoryName }
+            .map { it.toDocumentName() }
+            .forEach { deleteDocument(it) }
+    }
+
+    private suspend fun deleteDocument(path: String) {
+        collectionRef
+            .document(path)
+            .delete()
+            .await()
     }
 
     private fun ExpenseEntity.toDocumentName(): String = categoryName + "_" + id
