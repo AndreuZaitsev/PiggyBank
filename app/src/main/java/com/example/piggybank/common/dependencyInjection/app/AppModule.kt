@@ -51,6 +51,7 @@ class AppModule(private val application: MyApplication) {
 
     @Provides
     fun fireStore(): FirebaseFirestore = Firebase.firestore
+
 }
 
 @Module

@@ -16,13 +16,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MonthlyStatViewModel @Inject constructor(
-    private val repository: ExpensesRepository
+    private val repository: ExpensesRepository,
+   private val colorfulPallet: ColorfulPalletGenerator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MonthlyStatUIState())
     val uiState: StateFlow<MonthlyStatUIState> = _uiState.asStateFlow()
-
-    private val colorfulPallet = ColorfulPalletGenerator()
 
     fun onDateSelected(date: Date) {
         showData(date)
