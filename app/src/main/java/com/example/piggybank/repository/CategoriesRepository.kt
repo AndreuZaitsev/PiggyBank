@@ -27,13 +27,13 @@ class CategoriesRepository @Inject constructor(
                             .first()
                             .takeIf { it != -1L } ?: return@withContext
 
-            remoteCategories.saveCategory(category.copy(id = newId.toInt()))
+            remoteCategories.saveCategoryAsync(category.copy(id = newId.toInt()))
         }
     }
 
     suspend fun deleteCategory(category: CategoryEntity) {
         withContext(ioDispatcher) {
-            remoteCategories.deleteCategory(category)
+            remoteCategories.deleteCategoryAsync(category)
             categoryDao.deleteCategory(category.id)
             expensesRepository.deleteExpensesByCategory(category.name)
         }
@@ -45,7 +45,7 @@ class CategoriesRepository @Inject constructor(
 
             insertedIds.forEachIndexed { index, newId ->
                 if (index == -1) return@forEachIndexed
-                remoteCategories.saveCategory(categories[index].copy(id = newId.toInt()))
+                remoteCategories.saveCategoryAsync(categories[index].copy(id = newId.toInt()))
             }
         }
     }

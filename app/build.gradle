@@ -84,6 +84,11 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
-//    testImplementation "org.mockito:mockito-inline:3.12.4"
+    //Unit tests: Mockito
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
+
+    //Android tests: Kospresso
+    androidTestImplementation("com.kaspersky.android-components:kaspresso:1.5.3")
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
+    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.4")
 }

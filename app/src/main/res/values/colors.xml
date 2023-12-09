@@ -19,6 +19,6 @@
     <color name="selected_item">#00BFFF</color>
     <color name="unselected_item">#b8dae6</color>
 
-
+    <color name="unselected_category_bg_color">#00000000</color>
 
 </resources>

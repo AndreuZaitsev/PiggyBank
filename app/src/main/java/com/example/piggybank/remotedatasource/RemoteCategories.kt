@@ -7,11 +7,11 @@ import kotlinx.coroutines.tasks.await
 
 interface IRemoteCategories {
 
+    fun saveCategoryAsync(category: CategoryEntity)
+
+    fun deleteCategoryAsync(category: CategoryEntity)
+
     suspend fun getCategories(): List<CategoryEntity>
-
-    suspend fun saveCategory(category: CategoryEntity)
-
-    suspend fun deleteCategory(category: CategoryEntity)
 }
 
 class RemoteCategories @Inject constructor(
@@ -21,11 +21,10 @@ class RemoteCategories @Inject constructor(
     private val categoriesCollectionRef
         get() = fireStore.collection("categories")
 
-    override suspend fun saveCategory(category: CategoryEntity) {
+    override fun saveCategoryAsync(category: CategoryEntity) {
         categoriesCollectionRef
             .document(category.toDocumentPath())
             .set(category)
-            .await()
     }
 
     override suspend fun getCategories(): List<CategoryEntity> =
@@ -34,11 +33,10 @@ class RemoteCategories @Inject constructor(
             .await()
             .toObjects(CategoryEntity::class.java)
 
-    override suspend fun deleteCategory(category: CategoryEntity) {
+    override fun deleteCategoryAsync(category: CategoryEntity) {
         categoriesCollectionRef
             .document(category.toDocumentPath())
             .delete()
-            .await()
     }
 
     private fun CategoryEntity.toDocumentPath(): String = name + "_" + id

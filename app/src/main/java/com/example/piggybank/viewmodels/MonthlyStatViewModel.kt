@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class MonthlyStatViewModel @Inject constructor(
     private val repository: ExpensesRepository,
-   private val colorfulPallet: ColorfulPalletGenerator
+    private val colorfulPallet: ColorfulPalletGenerator,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MonthlyStatUIState())
