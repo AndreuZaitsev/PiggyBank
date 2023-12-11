@@ -46,7 +46,9 @@ interface CategoryDao {
 
     @Transaction
     suspend fun overrideCategoryAndGet(categories: List<CategoryEntity>): List<CategoryEntity> {
-        deleteAll()
+        if (categories.isNotEmpty()) {
+            deleteAll()
+        }
         insertAll(categories)
         return getAll()
     }

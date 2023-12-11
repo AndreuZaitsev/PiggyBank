@@ -20,6 +20,7 @@ object MainScreen : KScreen<MainScreen>() {
     val numPlus = KTextView{ withId(R.id.tv_plus) }
     val ivEnter = KImageView{withId(R.id.iv_enter)}
     val tvBalance = KTextView{withId(R.id.tv_balance)}
+    val tvStatistic = KTextView{withId(R.id.tv_statistic)}
     val listCategories = KRecyclerView (
         builder = { withId(R.id.list_categories) },
         itemTypeBuilder = { itemType(::CategoryItemScreen) }

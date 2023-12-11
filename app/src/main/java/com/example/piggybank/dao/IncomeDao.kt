@@ -50,14 +50,18 @@ interface IncomeDao {
 
     @Transaction
     suspend fun overrideIncomesAndGet(incomes: List<IncomeEntity>): List<IncomeEntity> {
-        deleteAll()
+        if (incomes.isNotEmpty()) {
+            deleteAll()
+        }
         insert(incomes)
         return getIncomes()
     }
 
     @Transaction
     suspend fun overrideIncomesAndSum(incomes: List<IncomeEntity>): Double {
-        deleteAll()
+        if (incomes.isNotEmpty()) {
+            deleteAll()
+        }
         insert(incomes)
         return sumIncomes()
     }

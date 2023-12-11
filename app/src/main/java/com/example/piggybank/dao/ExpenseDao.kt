@@ -57,7 +57,9 @@ interface ExpensesDao {
 
     @Transaction
     suspend fun overrideExpensesAndGet(expenses: List<ExpenseEntity>): List<ExpenseEntity> {
-        deleteAll()
+        if (expenses.isNotEmpty()) {
+            deleteAll()
+        }
         insert(expenses)
         return getAll()
     }

@@ -1,7 +1,9 @@
 package com.example.piggybank
 
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.rules.activityScenarioRule
 import com.example.piggybank.activity.MainActivity
+import com.example.piggybank.screen.DailyStatScreen
 import com.example.piggybank.screen.MainScreen
 import com.example.piggybank.utils.hasBackground
 import com.example.piggybank.utils.hasNoBackground
@@ -20,6 +22,10 @@ class MainFragmentTest : TestCase() {
     fun addingExpensiveSuccess() = run {
         step("Open target screen") {
             MainScreen {
+                tvStatistic {
+                    isVisible()
+                    isClickable()
+                }
                 tvBalance.hasAnyText()
 
                 numbers {
@@ -87,6 +93,25 @@ class MainFragmentTest : TestCase() {
                 }
                 val newBalance = previousBalance - 6.0
                 tvBalance.hasText(newBalance.toString())
+            }
+        }
+        step("Check expenses on statistic screen") {
+            MainScreen {
+                tvStatistic.click()
+            }
+            DailyStatScreen {
+                isDisplayed()
+
+                rvExpenses {
+                    isVisible()
+                    lastChild<DailyStatScreen.ItemExpensesScreen> {
+                        val previousExpensesValue = tvExpensesValue.text.orEmpty().toDouble()
+
+                        tvExpensesName.hasText("car")
+
+                        //tvData.hasText(System.currentTimeMillis().toString())
+                    }
+                }
             }
         }
     }
