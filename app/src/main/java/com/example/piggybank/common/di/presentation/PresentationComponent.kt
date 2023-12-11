@@ -1,4 +1,4 @@
-package com.example.piggybank.common.dependencyInjection.presentation
+package com.example.piggybank.common.di.presentation
 
 import com.example.piggybank.activity.MainActivity
 import com.example.piggybank.fragments.AddCategoryFragment

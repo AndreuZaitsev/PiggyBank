@@ -1,10 +1,9 @@
 package com.example.piggybank.repository
 
-import com.example.piggybank.common.dependencyInjection.dispatcher.IoDispatcher
+import com.example.piggybank.common.di.dispatcher.IoDispatcher
 import com.example.piggybank.dao.IncomeDao
 import com.example.piggybank.dao.IncomeEntity
 import com.example.piggybank.remotedatasource.IRemoteIncomes
-import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

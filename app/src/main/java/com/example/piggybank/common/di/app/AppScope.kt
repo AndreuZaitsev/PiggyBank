@@ -1,4 +1,4 @@
-package com.example.piggybank.common.dependencyInjection.app
+package com.example.piggybank.common.di.app
 
 import javax.inject.Scope
 

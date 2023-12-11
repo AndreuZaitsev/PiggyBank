@@ -1,8 +1,8 @@
-package com.example.piggybank.common.dependencyInjection.activity
+package com.example.piggybank.common.di.activity
 
 import androidx.appcompat.app.AppCompatActivity
-import com.example.piggybank.common.dependencyInjection.presentation.PresentationComponent
-import com.example.piggybank.common.dependencyInjection.presentation.PresentationModule
+import com.example.piggybank.common.di.presentation.PresentationComponent
+import com.example.piggybank.common.di.presentation.PresentationModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 

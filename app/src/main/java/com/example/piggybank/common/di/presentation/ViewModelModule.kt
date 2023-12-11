@@ -1,4 +1,4 @@
-package com.example.piggybank.common.dependencyInjection.presentation
+package com.example.piggybank.common.di.presentation
 
 import androidx.lifecycle.ViewModel
 import com.example.piggybank.viewmodels.AddCategoryViewModel

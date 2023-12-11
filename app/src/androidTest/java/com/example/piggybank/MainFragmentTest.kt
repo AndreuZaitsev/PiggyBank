@@ -83,7 +83,6 @@ class MainFragmentTest : TestCase() {
         step("Expenses of the first category added successfully") {
             MainScreen {
                 numbers.hasText("1+5")
-                val previousBalance = tvBalance.text.orEmpty().toDouble()
                 ivEnter.click()
                 numbers.hasEmptyText()
                 listCategories {
@@ -91,8 +90,7 @@ class MainFragmentTest : TestCase() {
                         ivIcon.hasNoBackground(device.targetContext)
                     }
                 }
-                val newBalance = previousBalance - 6.0
-                tvBalance.hasText(newBalance.toString())
+                tvBalance.hasText("-6.0")
             }
         }
         step("Check expenses on statistic screen") {

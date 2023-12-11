@@ -1,4 +1,4 @@
-package com.example.piggybank.common.dependencyInjection.dispatcher
+package com.example.piggybank.common.di.dispatcher
 
 import dagger.Module
 import dagger.Provides

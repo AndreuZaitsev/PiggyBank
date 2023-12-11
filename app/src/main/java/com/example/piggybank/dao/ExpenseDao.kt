@@ -66,9 +66,10 @@ interface ExpensesDao {
 
     @Transaction
     suspend fun overrideExpensesAndSum(expenses: List<ExpenseEntity>): Double {
-        deleteAll()
+        if (expenses.isNotEmpty()) {
+            deleteAll()
+        }
         insert(expenses)
         return sumExpenses()
     }
-
 }

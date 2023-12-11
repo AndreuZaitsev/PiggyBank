@@ -1,6 +1,6 @@
 package com.example.piggybank.repository
 
-import com.example.piggybank.common.dependencyInjection.dispatcher.IoDispatcher
+import com.example.piggybank.common.di.dispatcher.IoDispatcher
 import com.example.piggybank.dao.CategoryDao
 import com.example.piggybank.dao.CategoryEntity
 import com.example.piggybank.remotedatasource.IRemoteCategories

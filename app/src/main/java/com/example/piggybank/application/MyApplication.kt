@@ -2,18 +2,16 @@ package com.example.piggybank.application
 
 import android.app.Application
 import com.example.piggybank.BuildConfig
-import com.example.piggybank.common.dependencyInjection.app.AppComponent
-import com.example.piggybank.common.dependencyInjection.app.AppModule
-import com.example.piggybank.common.dependencyInjection.app.DaggerAppComponent
-import timber.log.Timber.*
+import com.example.piggybank.common.di.app.AppComponent
+import com.example.piggybank.common.di.app.AppModule
+import com.example.piggybank.common.di.app.DaggerAppComponent
+import timber.log.Timber.DebugTree
 import timber.log.Timber.Forest.plant
 
-class MyApplication : Application() {
+open class MyApplication : Application() {
 
     val appComponent: AppComponent by lazy {
-        DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .build()
+        initComponent()
     }
 
     override fun onCreate() {
@@ -22,4 +20,8 @@ class MyApplication : Application() {
             plant(DebugTree())
         }
     }
+
+    open fun initComponent(): AppComponent = DaggerAppComponent.builder()
+        .appModule(AppModule(this))
+        .build()
 }

@@ -14,19 +14,6 @@ interface IRemoteCategories {
     suspend fun getCategories(): List<CategoryEntity>
 }
 
-class StubRemoteCategories @Inject constructor(): IRemoteCategories {
-
-    override fun saveCategoryAsync(category: CategoryEntity) {
-        // do nothing
-    }
-
-    override fun deleteCategoryAsync(category: CategoryEntity) {
-        // do nothing
-    }
-
-    override suspend fun getCategories(): List<CategoryEntity> = emptyList()
-}
-
 class RemoteCategories @Inject constructor(
     private val fireStore: FirebaseFirestore,
 ) : IRemoteCategories {

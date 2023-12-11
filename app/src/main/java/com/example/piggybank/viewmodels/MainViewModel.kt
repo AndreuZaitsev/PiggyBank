@@ -138,9 +138,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onEnteredClicked(key: String) {
+    fun onEnteredClicked(inputValue: String) {
         viewModelScope.launch {
-            if (key.isEmpty()) {
+            if (inputValue.isEmpty()) {
                 _showErrorEvent.emit("Wrong value")
             } else {
                 val selectedCategory = _uiState.value.categories.find {
@@ -149,11 +149,8 @@ class MainViewModel @Inject constructor(
                 if (selectedCategory == null) {
                     _showErrorEvent.emit("Choose item category")
                 } else {
-                    val newKey = _uiState.value.keyboardInput.calculateInput().toString()
-                    val expense = (ExpenseEntity(
-                        System.currentTimeMillis(),
-                        selectedCategory.name,
-                        newKey))
+                    val expensesValue = _uiState.value.keyboardInput.calculateInput().toString()
+                    val expense = ExpenseEntity(System.currentTimeMillis(), selectedCategory.name, expensesValue)
                     expenseRepository.saveExpenseValue(expense)
                     updateState()
                 }

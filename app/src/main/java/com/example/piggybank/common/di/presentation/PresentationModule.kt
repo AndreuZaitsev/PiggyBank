@@ -1,7 +1,6 @@
-package com.example.piggybank.common.dependencyInjection.presentation
+package com.example.piggybank.common.di.presentation
 
 import androidx.savedstate.SavedStateRegistryOwner
-import com.example.piggybank.ColorfulPalletGenerator
 import com.example.piggybank.ColorfulPalletGenerator.*
 import dagger.Module
 import dagger.Provides

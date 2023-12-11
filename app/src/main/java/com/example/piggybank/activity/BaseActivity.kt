@@ -2,9 +2,9 @@ package com.example.piggybank.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.piggybank.application.MyApplication
-import com.example.piggybank.common.dependencyInjection.activity.ActivityComponent
-import com.example.piggybank.common.dependencyInjection.app.AppComponent
-import com.example.piggybank.common.dependencyInjection.presentation.PresentationModule
+import com.example.piggybank.common.di.activity.ActivityComponent
+import com.example.piggybank.common.di.app.AppComponent
+import com.example.piggybank.common.di.presentation.PresentationModule
 
 open class BaseActivity : AppCompatActivity() {
 
