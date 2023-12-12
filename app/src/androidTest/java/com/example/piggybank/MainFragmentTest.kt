@@ -103,11 +103,8 @@ class MainFragmentTest : TestCase() {
                 rvExpenses {
                     isVisible()
                     lastChild<DailyStatScreen.ItemExpensesScreen> {
-                        val previousExpensesValue = tvExpensesValue.text.orEmpty().toDouble()
-
+                        tvExpensesValue.hasText("6.0")
                         tvExpensesName.hasText("car")
-
-                        //tvData.hasText(System.currentTimeMillis().toString())
                     }
                 }
             }
