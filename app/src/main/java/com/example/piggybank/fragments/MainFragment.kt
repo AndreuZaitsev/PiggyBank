@@ -51,6 +51,7 @@ class MainFragment : BaseFragment(layout.main_fragment) {
     )
 
     private val snapHelper: SnapHelper = PagerSnapHelper()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         injector.inject(this)
         super.onCreate(savedInstanceState)
@@ -81,7 +82,6 @@ class MainFragment : BaseFragment(layout.main_fragment) {
                 )
             )
         }
-
         setUpKeyboard()
         binding.ivAddBalance.setOnClickListener {
             viewModel.onAddBalanceClicked()

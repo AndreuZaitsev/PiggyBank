@@ -1,6 +1,6 @@
 package com.example.piggybank.viewmodels
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.CategoriesPrepopulate
 import com.example.piggybank.R
@@ -11,12 +11,13 @@ import com.example.piggybank.repository.CategoriesRepository
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.MainUiState
+import com.example.piggybank.viewmodels.common.SavedStateViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -26,10 +27,11 @@ class MainViewModel @Inject constructor(
     private val expenseRepository: ExpensesRepository,
     private val categoriesPrepopulate: CategoriesPrepopulate,
     private val calculator: Calculator,
-) : ViewModel() {
+) : SavedStateViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
-    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
+        .onEach { state -> savedStateHandle[SAVED_STATE_INPUT] = state.keyboardInput }
 
     private val _navigateToCategoryCreationEvent = MutableSharedFlow<Unit>()
     val navigateToCategoryCreationEvent = _navigateToCategoryCreationEvent.asSharedFlow()
@@ -47,6 +49,15 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             categoriesPrepopulate.prepopulate()
             reloadState()
+        }
+    }
+
+    override fun init(savedStateHandle: SavedStateHandle) {
+        super.init(savedStateHandle)
+        if (savedStateHandle.contains(SAVED_STATE_INPUT)) {
+            _uiState.update {
+                it.copy(keyboardInput = savedStateHandle[SAVED_STATE_INPUT]!!)
+            }
         }
     }
 
@@ -70,6 +81,7 @@ class MainViewModel @Inject constructor(
     fun onDeleteClicked() {
         _uiState.update {
             it.copy(keyboardInput = it.keyboardInput.dropLast(1))
+
         }
     }
 
@@ -194,6 +206,8 @@ class MainViewModel @Inject constructor(
     }
 
     companion object {
+
+        private const val SAVED_STATE_INPUT = "SAVED_STATE_INPUT"
 
         private val addCategoryItem = CategoryItem("add", R.drawable.ic_add, false)
     }
