@@ -1,6 +1,5 @@
 package com.example.piggybank.fragments
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,7 +51,6 @@ class MainFragment : BaseFragment(layout.main_fragment) {
     )
 
     private val snapHelper: SnapHelper = PagerSnapHelper()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         injector.inject(this)
         super.onCreate(savedInstanceState)
@@ -96,7 +94,6 @@ class MainFragment : BaseFragment(layout.main_fragment) {
         observeUiState()
         observeNavigationEvents()
     }
-
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(STARTED) {
