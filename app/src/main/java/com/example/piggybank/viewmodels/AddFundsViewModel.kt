@@ -1,5 +1,6 @@
 package com.example.piggybank.viewmodels
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.piggybank.calculator.Calculator
@@ -7,12 +8,14 @@ import com.example.piggybank.dao.IncomeEntity
 import com.example.piggybank.repository.ExpensesRepository
 import com.example.piggybank.repository.IncomeRepository
 import com.example.piggybank.uistates.AddFundsUIState
+import com.example.piggybank.viewmodels.common.SavedStateViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,13 +23,24 @@ class AddFundsViewModel @Inject constructor(
     private val incomeRepository: IncomeRepository,
     private val expensesRepository: ExpensesRepository,
     private val calculator: Calculator,
-) : ViewModel() {
+) : SavedStateViewModel() {
 
     private val _uiState = MutableStateFlow(AddFundsUIState())
-    val uiState: StateFlow<AddFundsUIState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow().onEach {
+        state -> savedStateHandle[SAVED_STATE_INPUT] = state.keyBoardInput
+    }
 
     private val _navigateToEditIncomesScreenEvent = MutableSharedFlow<Unit>()
     val navigateToEditIncomesScreenEvent = _navigateToEditIncomesScreenEvent.asSharedFlow()
+
+    override fun init(savedStateHandle: SavedStateHandle) {
+        super.init(savedStateHandle)
+        if(savedStateHandle.contains(SAVED_STATE_INPUT)){
+            _uiState.update {
+                it.copy(keyBoardInput = savedStateHandle[SAVED_STATE_INPUT]!!)
+            }
+        }
+    }
 
     fun onKeyClicked(key: String) {
         _uiState.update {
@@ -67,7 +81,7 @@ class AddFundsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 val newBalance = incomeRepository.getSumIncomes() - expensesRepository.getSumExpenses()
-                it.copy(balance = newBalance.toString(), keyBoardInput = "")
+                it.copy(balance = newBalance.toString())
             }
         }
     }
@@ -82,5 +96,9 @@ class AddFundsViewModel @Inject constructor(
         viewModelScope.launch {
             _navigateToEditIncomesScreenEvent.emit(Unit)
         }
+    }
+
+    companion object{
+        private const val SAVED_STATE_INPUT = "SAVED_STATE_INPUT"
     }
 }
